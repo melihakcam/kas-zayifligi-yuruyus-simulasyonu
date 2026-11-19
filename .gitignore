@@ -18,3 +18,10 @@ SUTIS_2026_Proje_Arastirmasi.md
 Join-Path/
 
 GaitSim*.png
+
+# 3D görüntüleyici ara dosyaları
+web/build/
+web/data/*.bin
+goruntu.zip
+web_verisi*.zip
+Kas Analiz ve Hasar*.png

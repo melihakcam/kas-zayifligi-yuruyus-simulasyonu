@@ -1,0 +1,909 @@
+<meta charset="utf-8">
+<title>Yürüyüş Kas Simülatörü</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: lab-instrument console. Left = controls, centre = 3D stage, right = live traces, bottom = verdicts. */
+:root {
+  --bg: #0a0e17;
+  --panel: #111725;
+  --panel-2: #172034;
+  --line: #243049;
+  --fg: #e7eaf3;
+  --muted: #8b94ad;
+  --accent: #8f7cff;
+  --muscle: #d8463b;
+  --good: #3cc27a;
+  --bad: #f05252;
+  --warn: #f2a93b;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px 20px;
+  box-sizing: border-box;
+}
+* { box-sizing: border-box; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.app { display: grid; gap: 12px; max-width: 1680px; margin: 0 auto;
+  grid-template-columns: 290px minmax(0, 1fr) 400px;
+  grid-template-areas: "head head head" "side stage charts" "foot foot foot"; }
+header { grid-area: head; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand svg { flex: none; }
+.brand h1 { font-size: 22px; letter-spacing: 0.01em; }
+.brand p { margin: 2px 0 0; color: var(--muted); font-size: 12.5px; }
+.head-note { margin-left: auto; color: var(--muted); font-size: 12px; font-family: var(--font-data); }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; min-width: 0; }
+.panel h2 { font-size: 15px; margin-bottom: 10px; }
+.label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+/* side */
+aside { grid-area: side; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.scenarios { display: flex; flex-direction: column; gap: 6px; }
+.scn { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 10px; padding: 9px 10px;
+  border: 1px solid var(--line); border-radius: 9px; background: var(--panel-2); cursor: pointer; text-align: left; }
+.scn:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+.scn[aria-checked="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--panel-2)); }
+.scn .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--muted); }
+.scn[aria-checked="true"] .dot { border-color: var(--accent); box-shadow: inset 0 0 0 3px var(--panel-2); background: var(--accent); }
+.scn .name { font-size: 13px; line-height: 1.3; }
+.pill { font-family: var(--font-data); font-size: 11.5px; padding: 2px 7px; border-radius: 99px; white-space: nowrap; }
+.pill.good { color: var(--good); background: color-mix(in srgb, var(--good) 15%, transparent); }
+.pill.bad { color: var(--bad); background: color-mix(in srgb, var(--bad) 15%, transparent); }
+.pill.warn { color: var(--warn); background: color-mix(in srgb, var(--warn) 15%, transparent); }
+
+.groups { display: flex; flex-direction: column; gap: 2px; }
+.grp { display: grid; grid-template-columns: 16px 12px 1fr auto; align-items: center; gap: 8px; padding: 5px 4px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+.grp:hover { background: var(--panel-2); }
+.grp input { margin: 0; accent-color: var(--accent); }
+.swatch { width: 12px; height: 12px; border-radius: 3px; }
+.cap { font-family: var(--font-data); font-size: 11.5px; color: var(--warn); }
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; font-size: 13px; }
+.toggles label { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.seg { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-top: 10px; }
+.seg button { flex: 1; padding: 6px 8px; background: transparent; border: 0; cursor: pointer; font-size: 12.5px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--panel-2); color: var(--fg); }
+dl.kv { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; margin: 0; font-size: 13px; }
+dl.kv dt { color: var(--muted); }
+dl.kv dd { margin: 0; font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+
+/* stage */
+.stage { grid-area: stage; display: flex; flex-direction: column; padding: 0; overflow: hidden; min-height: 560px; }
+.viewport { position: relative; flex: 1; min-height: 420px; background: radial-gradient(120% 90% at 50% 20%, #18223a 0%, var(--bg) 70%); }
+.viewport canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hud { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; gap: 10px; pointer-events: none; flex-wrap: wrap; }
+.hud .card { background: color-mix(in srgb, var(--panel) 82%, transparent); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; backdrop-filter: blur(6px); }
+.hud .title { font-family: var(--font-display); font-weight: 600; font-size: 14px; }
+.hud .sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.status { font-family: var(--font-data); font-size: 13px; font-weight: 500; }
+.status.good { color: var(--good); } .status.bad { color: var(--bad); } .status.warn { color: var(--warn); }
+.tags { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.tag { position: absolute; transform: translate(-50%, -100%); padding: 5px 9px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1.5px solid; white-space: nowrap; line-height: 1.25; text-align: center; }
+.tag small { display: block; font-family: var(--font-data); font-weight: 500; font-size: 11px; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; text-align: center; padding: 20px; }
+.transport { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.icon-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); display: grid; place-items: center; cursor: pointer; }
+.icon-btn:hover { border-color: var(--accent); }
+.transport input[type=range] { flex: 1; min-width: 120px; accent-color: var(--accent); }
+.clock { font-family: var(--font-data); font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 128px; }
+.transport select { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+
+/* charts */
+.charts { grid-area: charts; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.chart h2 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.chart h2 span { font-family: var(--font-body); font-weight: 400; font-size: 11.5px; color: var(--muted); }
+.chart svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 5px; }
+.legend i.dash { border-top-style: dashed; }
+.axis text { fill: var(--muted); font-family: var(--font-data); font-size: 9.5px; }
+.axis line, .grid line { stroke: var(--line); }
+
+/* bottom */
+.foot { grid-area: foot; display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 12px; }
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.checks li { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center; font-size: 13px; }
+.mark { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; color: var(--bg); }
+.mark.good { background: var(--good); } .mark.bad { background: var(--bad); } .mark.warn { background: var(--warn); }
+.cmp { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.cmp button { border: 1px solid var(--line); background: var(--panel-2); border-radius: 10px; padding: 8px 6px 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.cmp button[aria-current="true"] { border-color: var(--accent); }
+.cmp .hd { font-size: 11.5px; font-weight: 600; text-align: center; line-height: 1.25; min-height: 2.5em; display: grid; place-items: center; }
+.cmp .count { font-family: var(--font-data); font-size: 12px; }
+.findings { display: flex; flex-direction: column; gap: 10px; font-size: 13px; line-height: 1.5; }
+.findings p { margin: 0; }
+.findings b { font-weight: 600; }
+.method { grid-column: 1 / -1; color: var(--muted); font-size: 12px; line-height: 1.5; margin: 0; }
+
+@media (max-width: 1280px) {
+  .app { grid-template-columns: 270px minmax(0, 1fr); grid-template-areas: "head head" "side stage" "charts charts" "foot foot"; }
+  .charts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .foot { grid-template-columns: 1fr 1fr; } .foot .wide { grid-column: 1 / -1; }
+}
+@media (max-width: 860px) {
+  .app { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "stage" "side" "charts" "foot"; }
+  .charts, .foot { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; } .viewport { min-height: 62vh; }
+  .cmp { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .head-note { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <header>
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+        <rect width="34" height="34" rx="9" fill="var(--panel-2)" stroke="var(--line)"/>
+        <circle cx="18" cy="7.5" r="2.6" fill="var(--accent)"/>
+        <path d="M17 11 L14 19 L18 22 L16 29 M14 19 L10 27 M17 11 L22 16 L25 14 M16 13 L11 16" fill="none" stroke="var(--fg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 19 L18 22" stroke="var(--muscle)" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <h1>Yürüyüş Kas Simülatörü</h1>
+        <p>Kas zayıflığı altında yürüyüş · MS-Human-700 · MuJoCo</p>
+      </div>
+    </div>
+    <div class="head-note" id="headNote">Veriler yükleniyor…</div>
+  </header>
+
+  <aside>
+    <section class="panel">
+      <h2>Senaryo</h2>
+      <div class="scenarios" id="scenarios" role="radiogroup" aria-label="Senaryo"></div>
+    </section>
+    <section class="panel">
+      <h2>Kas grupları</h2>
+      <div class="groups" id="groups"></div>
+      <div class="seg" role="group" aria-label="Kas rengi">
+        <button id="modeAct" aria-pressed="true">Aktivasyon</button>
+        <button id="modeGroup" aria-pressed="false">Grup renkleri</button>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Görünüm</h2>
+      <div class="toggles">
+        <label><input type="checkbox" id="tMuscles" checked> Kaslar</label>
+        <label><input type="checkbox" id="tBones" checked> İskelet</label>
+        <label><input type="checkbox" id="tGrf" checked> Yer tepki kuvveti</label>
+        <label><input type="checkbox" id="tFollow" checked> Kamera takibi</label>
+        <label><input type="checkbox" id="tTags" checked> Etiketler</label>
+        <label><input type="checkbox" id="tGhost"> Normal hayalet</label>
+      </div>
+      <div class="seg" role="group" aria-label="Model görünümü">
+        <button id="viewAnat" aria-pressed="true">Gerçekçi anatomi</button>
+        <button id="viewSchem" aria-pressed="false">Simülasyon kasları</button>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Model</h2>
+      <dl class="kv" id="modelInfo"></dl>
+    </section>
+  </aside>
+
+  <section class="panel stage" aria-label="3D simülasyon">
+    <div class="viewport" id="viewport">
+      <div class="tags" id="tags"></div>
+      <div class="hud">
+        <div class="card"><div class="title" id="hudTitle">—</div><div class="sub" id="hudSub"></div></div>
+        <div class="card"><div class="status" id="hudStatus">—</div><div class="sub" id="hudMetric"></div></div>
+      </div>
+      <div class="loading" id="loading">3D model yükleniyor…</div>
+    </div>
+    <div class="transport">
+      <button class="icon-btn" id="play" aria-label="Duraklat">
+        <svg width="14" height="14" viewBox="0 0 14 14" id="playIcon"><rect x="2" y="1" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="8.5" y="1" width="3.5" height="12" rx="1" fill="currentColor"/></svg>
+      </button>
+      <button class="icon-btn" id="restart" aria-label="Baştan oynat">
+        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 2v4h4M3.4 6A4.6 4.6 0 1 1 3 8.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Zaman">
+      <span class="clock" id="clock">0.00 s · döngü %0</span>
+      <select id="speed" aria-label="Hız">
+        <option value="0.25">0.25×</option>
+        <option value="0.5" selected>0.5×</option>
+        <option value="1">1×</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="charts">
+    <div class="panel chart"><h2>Kas aktivasyonu <span>sağ bacak, 0–1</span></h2><svg id="cAct" viewBox="0 0 380 150" role="img" aria-label="Kas aktivasyonu grafiği"></svg><div class="legend" id="lAct"></div></div>
+    <div class="panel chart"><h2>Kas kuvveti <span>N</span></h2><svg id="cForce" viewBox="0 0 380 150" role="img" aria-label="Kas kuvveti grafiği"></svg><div class="legend" id="lForce"></div></div>
+    <div class="panel chart"><h2>Eklem sapması <span>referans yürüyüşten ortalama fark, rad</span></h2><svg id="cErr" viewBox="0 0 380 150" role="img" aria-label="Eklem sapması grafiği"></svg><div class="legend" id="lErr"></div></div>
+  </section>
+
+  <section class="foot">
+    <div class="panel"><h2>Sonuç özeti</h2><ul class="checks" id="checks"></ul></div>
+    <div class="panel wide"><h2>Yürüyüş karşılaştırması <span class="label">6 deneme</span></h2><div class="cmp" id="cmp"></div></div>
+    <div class="panel"><h2>Bulgular</h2><div class="findings" id="findings"></div></div>
+    <p class="method" id="method"></p>
+  </section>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const GROUP_COLORS = {
+  gluteus_medius: '#ffb13b', gluteus_maximus: '#4d8dff', hamstrings: '#ff8fbf', vasti: '#b98cff',
+  gastrocnemius: '#d7e65a', soleus: '#5fd38a', tibialis_anterior: '#2ec9b6', hip_flexors: '#64cdf5', other: '#8b94ad',
+};
+const CHART_GROUPS = ['gluteus_medius', 'gluteus_maximus'];
+const EVAL_KEYS = {
+  normal: 'normal @1.00', glmed: 'gluteus_medius @0.20', glmax: 'gluteus_maximus @0.20',
+  both: 'gluteus_medius+gluteus_maximus @0.20',
+};
+const SHORT = { normal: 'Normal', glmed: 'G. medius %20', glmax: 'G. maksimus %20', both: 'İkisi %20', both_adapted: 'İkisi %20 + uyum' };
+const $ = (id) => document.getElementById(id);
+
+const state = { manifest: null, data: {}, current: 'both', t: 0, playing: true, speed: 0.5,
+  mode: 'act', view: 'anat', highlight: new Set(), duration: 3.6, follow: true };
+
+/* ---------- data ---------- */
+async function loadJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(url); return r.json(); }
+async function loadBin(url) {   // binary data ships as base64 text: data/x.bin -> data/x.b64.txt
+  const r = await fetch(url.replace(/\.bin$/, '.b64.txt'));
+  if (!r.ok) throw new Error(url);
+  const s = atob(await r.text());
+  const out = new Uint8Array(s.length);
+  for (let i = 0; i < s.length; i++) out[i] = s.charCodeAt(i);
+  return out.buffer;
+}
+function view(buffer, spec) {
+  const n = spec.shape.reduce((a, b) => a * b, 1);
+  return { a: new Float32Array(buffer, spec.offset, n), shape: spec.shape };
+}
+async function scenarioData(key) {
+  if (state.data[key]) return state.data[key];
+  const info = state.manifest.scenarios.find((s) => s.key === key);
+  const buf = await loadBin(`data/${key}.bin`);
+  const d = { info };
+  for (const [name, spec] of Object.entries(info.arrays)) d[name] = view(buf, spec);
+  d.T = d.time.a.length;
+  d.end = d.time.a[d.T - 1];
+  d.series = groupSeries(d);
+  state.data[key] = d;
+  return d;
+}
+function groupSeries(d) {
+  const M = state.manifest.muscles;
+  const out = {};
+  for (const g of CHART_GROUPS) {
+    const idx = M.map((m, i) => (m.group === g && m.side === 'r' ? i : -1)).filter((i) => i >= 0);
+    const act = new Float32Array(d.T), force = new Float32Array(d.T);
+    for (let f = 0; f < d.T; f++) {
+      let a = 0, s = 0;
+      for (const i of idx) { a += d.act.a[f * M.length + i]; s += d.force.a[f * M.length + i]; }
+      act[f] = a / idx.length; force[f] = s;
+    }
+    out[g] = { act, force };
+  }
+  return out;
+}
+function frameAt(d, t) {
+  const tt = d.time.a;
+  if (t <= tt[0]) return [0, 0, 0];
+  if (t >= d.end) return [d.T - 1, d.T - 1, 0];
+  let lo = 0, hi = d.T - 1;
+  while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (tt[mid] <= t) lo = mid; else hi = mid; }
+  return [lo, hi, (t - tt[lo]) / (tt[hi] - tt[lo])];
+}
+
+/* ---------- 3D ---------- */
+const viewport = $('viewport');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+viewport.prepend(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 60);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.target.set(0, 0.95, 0);
+camera.position.set(-1.7, 1.35, 3.4);
+
+scene.add(new THREE.HemisphereLight(0xeef1ff, 0x2a2430, 1.5));
+const sun = new THREE.DirectionalLight(0xffffff, 1.9);
+sun.position.set(2.5, 5, 3);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -2.5, right: 2.5, top: 2.5, bottom: -2.5, near: 0.5, far: 15 });
+scene.add(sun, sun.target);
+const rim = new THREE.DirectionalLight(0x8f7cff, 0.6);
+rim.position.set(-3, 2, -3);
+scene.add(rim);
+
+// floor: MuJoCo is z-up, the world group turns it to three.js y-up
+const world = new THREE.Group();
+world.rotation.x = -Math.PI / 2;
+scene.add(world);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40),
+  new THREE.MeshStandardMaterial({ color: 0x121a2b, roughness: 0.95 }));
+floor.receiveShadow = true;
+world.add(floor);
+const grid = new THREE.GridHelper(40, 80, 0x2b3a5c, 0x1c263b);
+grid.rotation.x = Math.PI / 2;
+grid.position.z = 0.001;
+world.add(grid);
+
+const boneMat = new THREE.MeshStandardMaterial({ color: 0xece2cf, roughness: 0.62, metalness: 0.0 });
+const ghostMat = new THREE.MeshBasicMaterial({ color: 0x8f7cff, transparent: true, opacity: 0.16, depthWrite: false });
+let bones = [], ghostBones = [], muscleSeg = null, muscleJoint = null, segInfo = [];
+const heat = [], arrows = [];
+
+function buildModel(meshBuf) {
+  const man = state.manifest;
+  const geos = man.meshes.map((m) => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(meshBuf, m.vert_offset, m.vert_count * 3), 3));
+    g.setIndex(new THREE.BufferAttribute(new Uint32Array(meshBuf, m.face_offset, m.face_count * 3), 1));
+    g.computeVertexNormals();
+    return g;
+  });
+  for (const gi of man.geoms) {
+    const mesh = new THREE.Mesh(geos[gi.mesh], boneMat);
+    mesh.castShadow = true;
+    mesh.matrixAutoUpdate = true;
+    world.add(mesh);
+    bones.push(mesh);
+    const ghost = new THREE.Mesh(geos[gi.mesh], ghostMat);
+    ghost.visible = false;
+    world.add(ghost);
+    ghostBones.push(ghost);
+  }
+  // muscles: one tapered cylinder per path segment, spheres at the inner joints
+  const K = man.points_per_muscle, M = man.muscles.length;
+  const segCount = M * (K - 1);
+  const cyl = new THREE.CylinderGeometry(1, 1, 1, 10, 1, true);
+  const sph = new THREE.SphereGeometry(1, 10, 8);
+  const mat = new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.05, vertexColors: false });
+  muscleSeg = new THREE.InstancedMesh(cyl, mat, segCount);
+  muscleJoint = new THREE.InstancedMesh(sph, mat, M * (K - 2));
+  for (const im of [muscleSeg, muscleJoint]) {
+    im.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    im.castShadow = true;
+    im.frustumCulled = false;
+    im.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(im.count * 3), 3);
+    world.add(im);
+  }
+  const maxF = Math.max(...man.muscles.map((m) => m.max_force));
+  segInfo = man.muscles.map((m) => {
+    const r = 0.0035 + 0.0125 * Math.sqrt(m.max_force / maxF);
+    const prof = [];
+    for (let i = 0; i < K - 1; i++) prof.push(0.42 + 0.58 * Math.sin(Math.PI * (i + 0.5) / (K - 1)));
+    return { r, prof };
+  });
+  // ground reaction: heat disc + arrow under each foot
+  const tex = heatTexture();
+  for (let s = 0; s < 2; s++) {
+    const disc = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.42),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    disc.position.z = 0.003;
+    world.add(disc);
+    heat.push(disc);
+    const arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(), 0.3, 0x7fb2ff, 0.06, 0.035);
+    world.add(arrow);
+    arrows.push(arrow);
+  }
+}
+function heatTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const x = c.getContext('2d');
+  const g = x.createRadialGradient(64, 64, 2, 64, 64, 62);
+  g.addColorStop(0, 'rgba(255,60,40,1)'); g.addColorStop(0.35, 'rgba(255,190,40,0.85)');
+  g.addColorStop(0.65, 'rgba(60,220,120,0.5)'); g.addColorStop(1, 'rgba(40,90,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
+const _p = new THREE.Vector3(), _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _s = new THREE.Vector3();
+const _a = new THREE.Vector3(), _b = new THREE.Vector3(), _up = new THREE.Vector3(0, 1, 0), _m = new THREE.Matrix4();
+const _c = new THREE.Color(), _dark = new THREE.Color('#4a1714'), _bright = new THREE.Color('#ff5a46'), _weakDim = new THREE.Color();
+const tagState = {};
+
+function lerpArr(arr, stride, i0, i1, w, k, out) {
+  const o0 = i0 * stride + k, o1 = i1 * stride + k;
+  out.set(arr[o0] + (arr[o1] - arr[o0]) * w, arr[o0 + 1] + (arr[o1 + 1] - arr[o0 + 1]) * w, arr[o0 + 2] + (arr[o1 + 2] - arr[o0 + 2]) * w);
+  return out;
+}
+function poseBones(d, meshes, f0, f1, w) {
+  const G = state.manifest.geoms.length;
+  for (let g = 0; g < G; g++) {
+    lerpArr(d.geom_pos.a, G * 3, f0, f1, w, g * 3, meshes[g].position);
+    const q = d.geom_quat.a, o0 = (f0 * G + g) * 4, o1 = (f1 * G + g) * 4;
+    _q.set(q[o0 + 1], q[o0 + 2], q[o0 + 3], q[o0]);
+    _q2.set(q[o1 + 1], q[o1 + 2], q[o1 + 3], q[o1]);
+    meshes[g].quaternion.slerpQuaternions(_q, _q2, w);
+  }
+}
+function render3D() {
+  const d = state.data[state.current];
+  if (!d || !muscleSeg) return;
+  const man = state.manifest, M = man.muscles.length, K = man.points_per_muscle;
+  const [f0, f1, w] = frameAt(d, state.t);
+  poseBones(d, bones, f0, f1, w);
+  const ghostOn = $('tGhost').checked && state.current !== 'normal' && state.data.normal;
+  ghostBones.forEach((g) => (g.visible = !!ghostOn));
+  if (ghostOn) { const n = state.data.normal; const [g0, g1, gw] = frameAt(n, state.t); poseBones(n, ghostBones, g0, g1, gw); }
+
+  const weak = new Set(d.info.groups.map((g) => g.replace('right_', '')));
+  const pts = d.paths.a, stride = M * K * 3;
+  let si = 0, ji = 0;
+  const sums = {};
+  for (let m = 0; m < M; m++) {
+    const info = man.muscles[m];
+    const act = d.act.a[f0 * M + m] + (d.act.a[f1 * M + m] - d.act.a[f0 * M + m]) * w;
+    const isWeak = info.side === 'r' && weak.has(info.group);
+    const lit = state.highlight.has(info.group) || isWeak;
+    if (state.mode === 'group') {
+      _c.set(GROUP_COLORS[info.group]).multiplyScalar(0.45 + 0.75 * act);
+    } else if (lit && (info.side === 'r' || !isWeak)) {
+      _c.set(GROUP_COLORS[info.group]).multiplyScalar(0.55 + 0.6 * act);
+      if (isWeak) _c.lerp(_weakDim.set('#3a2a26'), 0.15);
+    } else {
+      _c.copy(_dark).lerp(_bright, Math.min(1, act * 1.15));
+    }
+    const shrink = isWeak ? 0.75 : 1;
+    const { r, prof } = segInfo[m];
+    for (let k = 0; k < K - 1; k++) {
+      lerpArr(pts, stride, f0, f1, w, (m * K + k) * 3, _a);
+      lerpArr(pts, stride, f0, f1, w, (m * K + k + 1) * 3, _b);
+      const len = _a.distanceTo(_b);
+      _p.addVectors(_a, _b).multiplyScalar(0.5);
+      if (len > 1e-6) _q.setFromUnitVectors(_up, _b.clone().sub(_a).divideScalar(len)); else _q.identity();
+      const rr = r * prof[k] * shrink;
+      _m.compose(_p, _q, _s.set(rr, Math.max(len, 1e-4), rr));
+      muscleSeg.setMatrixAt(si, _m);
+      muscleSeg.setColorAt(si, _c);
+      si++;
+      if (k > 0) {
+        const rj = r * Math.min(prof[k - 1], prof[k]) * shrink;
+        _m.compose(_a, _q.identity(), _s.set(rj, rj, rj));
+        muscleJoint.setMatrixAt(ji, _m);
+        muscleJoint.setColorAt(ji, _c);
+        ji++;
+      }
+    }
+    if (lit && info.side === 'r') {
+      const mid = lerpArr(pts, stride, f0, f1, w, (m * K + Math.floor(K / 2)) * 3, new THREE.Vector3());
+      const s = (sums[info.group] ||= { v: new THREE.Vector3(), n: 0 });
+      s.v.add(mid); s.n++;
+    }
+  }
+  for (const im of [muscleSeg, muscleJoint]) { im.instanceMatrix.needsUpdate = true; im.instanceColor.needsUpdate = true; }
+  const showMuscles = $('tMuscles').checked, showBones = $('tBones').checked;
+  const anatOn = anat.ready && state.view === 'anat';
+  muscleSeg.visible = muscleJoint.visible = showMuscles && !anatOn;
+  bones.forEach((b) => (b.visible = showBones && !anatOn));
+  if (anat.ready) {
+    anat.muscles.forEach((m) => (m.mesh.visible = anatOn && showMuscles));
+    anat.boneMeshes.forEach((m) => (m.visible = anatOn && showBones));
+    if (anatOn) { poseAnatomy(d, f0, f1, w); colorAnatomy(d, f0, f1, w, weak); }
+  }
+
+  // ground reaction force
+  const grfOn = $('tGrf').checked;
+  for (let s = 0; s < 2; s++) {
+    const F = d.grf.a[f0 * 2 + s] + (d.grf.a[f1 * 2 + s] - d.grf.a[f0 * 2 + s]) * w;
+    lerpArr(d.foot.a, 6, f0, f1, w, s * 3, _a);
+    heat[s].position.set(_a.x + 0.05, _a.y, 0.003);
+    heat[s].material.opacity = Math.min(1, F / 700);
+    heat[s].visible = grfOn && F > 15;
+    arrows[s].position.set(_a.x + 0.05, _a.y, 0.0);
+    arrows[s].setLength(Math.max(0.02, F / 1800), 0.05, 0.03);
+    arrows[s].visible = grfOn && F > 15;
+  }
+
+  // camera follows the pelvis along the walking direction
+  const pg = (f0 * man.geoms.length + pelvisGeom()) * 3;
+  const px = d.geom_pos.a[pg], pz = -d.geom_pos.a[pg + 1];   // MuJoCo (x, y) -> three.js (x, -z)
+  if ($('tFollow').checked && Number.isFinite(px)) {
+    const dx = (px - controls.target.x) * 0.12, dz = (pz - controls.target.z) * 0.12;
+    controls.target.x += dx; controls.target.z += dz;
+    camera.position.x += dx; camera.position.z += dz;
+  }
+  sun.target.position.copy(controls.target);
+  sun.position.set(controls.target.x + 2.5, 5, controls.target.z + 3);
+  updateTags(sums, weak);
+}
+let _pelvisGeom = null;
+function pelvisGeom() {
+  if (_pelvisGeom === null) _pelvisGeom = Math.max(0, state.manifest.geoms.findIndex((g) => g.body === 'pelvis'));
+  return _pelvisGeom;
+}
+function updateTags(sums, weak) {
+  const box = $('tags');
+  const show = $('tTags').checked && $('tMuscles').checked;
+  const keys = new Set(Object.keys(sums));
+  for (const [g, el] of Object.entries(tagState)) if (!keys.has(g) || !show) { el.remove(); delete tagState[g]; }
+  if (!show) return;
+  const rect = viewport.getBoundingClientRect();
+  for (const [g, s] of Object.entries(sums)) {
+    const v = s.v.divideScalar(s.n);
+    const p = new THREE.Vector3(v.x, v.z, -v.y).project(camera);
+    let el = tagState[g];
+    if (!el) {
+      el = document.createElement('div'); el.className = 'tag'; box.appendChild(el); tagState[g] = el;
+    }
+    const isWeak = weak.has(g);
+    const cap = state.data[state.current].info.capacity;
+    el.style.borderColor = GROUP_COLORS[g];
+    el.style.color = GROUP_COLORS[g];
+    el.innerHTML = `${state.manifest.groups[g] || g}<small>${isWeak ? `sağ · güç %${Math.round(cap * 100)} (↓%${Math.round((1 - cap) * 100)})` : 'sağ · tam güç'}</small>`;
+    const x = (p.x * 0.5 + 0.5) * rect.width, y = (-p.y * 0.5 + 0.5) * rect.height;
+    const side = g === 'gluteus_maximus' ? -1 : 1;
+    el.style.left = `${Math.min(rect.width - 70, Math.max(70, x + side * 95))}px`;
+    el.style.top = `${Math.min(rect.height - 10, Math.max(60, y - 10))}px`;
+    el.style.display = p.z < 1 ? '' : 'none';
+  }
+}
+function resize() {
+  const w = viewport.clientWidth, h = viewport.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / Math.max(1, h);
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(viewport);
+
+/* ---------- realistic anatomy (Z-Anatomy fitted to the MS-Human skeleton) ---------- */
+const anat = { ready: false, spec: null, bones: [], local: [], muscles: [], boneMeshes: [] };
+const tendonMat = new THREE.MeshStandardMaterial({ color: 0xe8dfcf, roughness: 0.36, metalness: 0 });
+const fasciaMat = new THREE.MeshStandardMaterial({ color: 0xf2ebdf, roughness: 0.4, transparent: true, opacity: 0.28, depthWrite: false });
+const zaBoneMat = new THREE.MeshStandardMaterial({ color: 0xece2cc, roughness: 0.6, metalness: 0 });
+const MUSCLE_REST = new THREE.Color('#b0392e'), MUSCLE_ACTIVE = new THREE.Color('#ff5a42');
+const _G = new THREE.Matrix4(), _gp = new THREE.Vector3(), _gq = new THREE.Quaternion(), _one = new THREE.Vector3(1, 1, 1);
+
+function mjMatrix(pos, quat) {   // MuJoCo quaternion order: w, x, y, z
+  return new THREE.Matrix4().compose(new THREE.Vector3(...pos), new THREE.Quaternion(quat[1], quat[2], quat[3], quat[0]), _one);
+}
+function buildAnatomy(spec, buf) {
+  anat.spec = spec;
+  world.updateMatrixWorld(true);
+  const W = world.matrixWorld, inverses = [];
+  for (const s of spec.skeleton) {
+    const bone = new THREE.Bone();
+    bone.matrixAutoUpdate = false;
+    const rest = mjMatrix(s.rest_pos, s.rest_quat);
+    bone.matrix.copy(rest);
+    world.add(bone);
+    anat.bones.push(bone);
+    inverses.push(new THREE.Matrix4().multiplyMatrices(W, rest).invert());
+    anat.local.push(mjMatrix(s.geom_local_pos, s.geom_local_quat).invert());
+  }
+  world.updateMatrixWorld(true);
+  const skeleton = new THREE.Skeleton(anat.bones, inverses);
+  for (const o of spec.objects) {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(buf, o.pos, o.verts * 3), 3));
+    g.setAttribute('skinIndex', new THREE.BufferAttribute(new Uint8Array(buf, o.skin_index, o.verts * 4), 4));
+    g.setAttribute('skinWeight', new THREE.BufferAttribute(new Uint8Array(buf, o.skin_weight, o.verts * 4), 4, true));
+    g.setIndex(new THREE.BufferAttribute(new Uint16Array(buf, o.index, o.tris * 3), 1));
+    g.computeVertexNormals();
+    let mesh;
+    if (o.kind === 'muscle') {
+      g.addGroup(0, o.belly_tris * 3, 0);
+      g.addGroup(o.belly_tris * 3, (o.tris - o.belly_tris) * 3, 1);
+      const mat = new THREE.MeshPhysicalMaterial({ color: MUSCLE_REST.clone(), roughness: 0.42, metalness: 0, clearcoat: 0.25, clearcoatRoughness: 0.5, sheen: 0.4, sheenColor: new THREE.Color('#ff9a8a') });
+      // fascia sheets (iliotibial tract) cover the gluteal muscles: draw them see-through
+      const sheet = !/Tensor/.test(o.name) && /Iliotibial|fascia|Fascia|aponeurosis|retinaculum/.test(o.name);
+      mesh = new THREE.SkinnedMesh(g, sheet ? [fasciaMat, fasciaMat] : [mat, tendonMat]);
+      if (sheet) mesh.renderOrder = 2;
+      anat.muscles.push({ mesh, mat, info: o });
+    } else {
+      mesh = new THREE.SkinnedMesh(g, zaBoneMat);
+      anat.boneMeshes.push(mesh);
+    }
+    mesh.frustumCulled = false;
+    mesh.castShadow = true;
+    world.add(mesh);
+    mesh.updateMatrixWorld(true);
+    mesh.bind(skeleton, mesh.matrixWorld);
+  }
+  anat.ready = true;
+}
+function poseAnatomy(d, f0, f1, w) {
+  const G = state.manifest.geoms.length;
+  anat.spec.skeleton.forEach((s, i) => {
+    lerpArr(d.geom_pos.a, G * 3, f0, f1, w, s.geom * 3, _gp);
+    const q = d.geom_quat.a, o0 = (f0 * G + s.geom) * 4, o1 = (f1 * G + s.geom) * 4;
+    _q.set(q[o0 + 1], q[o0 + 2], q[o0 + 3], q[o0]);
+    _q2.set(q[o1 + 1], q[o1 + 2], q[o1 + 3], q[o1]);
+    _gq.slerpQuaternions(_q, _q2, w);
+    _G.compose(_gp, _gq, _one);
+    anat.bones[i].matrix.multiplyMatrices(_G, anat.local[i]);
+    anat.bones[i].matrixWorldNeedsUpdate = true;
+  });
+}
+function colorAnatomy(d, f0, f1, w, weak) {
+  const M = state.manifest.muscles.length;
+  for (const m of anat.muscles) {
+    const dr = m.info.drivers;
+    let act = 0;
+    for (const i of dr) act += d.act.a[f0 * M + i] + (d.act.a[f1 * M + i] - d.act.a[f0 * M + i]) * w;
+    act = dr.length ? act / dr.length : 0;
+    const group = m.info.group;
+    const isWeak = m.info.side === 'r' && weak.has(group);
+    if (state.mode === 'group' && group !== 'other') m.mat.color.set(GROUP_COLORS[group]).multiplyScalar(0.5 + 0.7 * act);
+    else if (isWeak || state.highlight.has(group)) m.mat.color.set(GROUP_COLORS[group]).multiplyScalar(0.6 + 0.6 * act);
+    else m.mat.color.copy(MUSCLE_REST).lerp(MUSCLE_ACTIVE, Math.min(1, act * 1.2));
+  }
+}
+function setView(v) {
+  state.view = v;
+  $('viewAnat').setAttribute('aria-pressed', v === 'anat');
+  $('viewSchem').setAttribute('aria-pressed', v === 'schem');
+}
+$('viewAnat').addEventListener('click', () => setView('anat'));
+$('viewSchem').addEventListener('click', () => setView('schem'));
+
+/* ---------- charts ---------- */
+const CH = { w: 380, h: 150, l: 40, r: 10, t: 10, b: 24 };
+function svgEl(tag, attrs, parent) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  if (parent) parent.appendChild(el);
+  return el;
+}
+function niceMax(v) { const p = 10 ** Math.floor(Math.log10(v || 1)); for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p; return 10 * p; }
+function drawChart(svg, series, yMax, opts = {}) {
+  svg.textContent = '';
+  const X = (t) => CH.l + (t / state.duration) * (CH.w - CH.l - CH.r);
+  const Y = (v) => CH.h - CH.b - (v / yMax) * (CH.h - CH.t - CH.b);
+  const ax = svgEl('g', { class: 'axis' }, svg);
+  for (let i = 0; i <= 4; i++) {
+    const v = (yMax * i) / 4;
+    svgEl('line', { x1: CH.l, x2: CH.w - CH.r, y1: Y(v), y2: Y(v), 'stroke-width': i ? 0.6 : 1 }, ax);
+    const tx = svgEl('text', { x: CH.l - 6, y: Y(v) + 3, 'text-anchor': 'end' }, ax);
+    tx.textContent = yMax >= 100 ? Math.round(v) : v.toFixed(yMax <= 0.5 ? 2 : 1);
+  }
+  for (let s = 0; s <= Math.floor(state.duration); s++) {
+    const tx = svgEl('text', { x: X(s), y: CH.h - 8, 'text-anchor': 'middle' }, ax);
+    tx.textContent = `${s} s`;
+  }
+  if (opts.threshold != null) {
+    svgEl('line', { x1: CH.l, x2: CH.w - CH.r, y1: Y(opts.threshold), y2: Y(opts.threshold), stroke: 'var(--warn)', 'stroke-dasharray': '4 3', 'stroke-width': 1 }, svg);
+    const tx = svgEl('text', { x: CH.w - CH.r - 2, y: Y(opts.threshold) - 4, 'text-anchor': 'end', fill: 'var(--warn)', 'font-size': 9.5, 'font-family': 'var(--font-data)' }, svg);
+    tx.textContent = 'yürüme eşiği';
+  }
+  if (opts.fallAt != null) {
+    svgEl('rect', { x: X(opts.fallAt), y: CH.t, width: Math.max(0, CH.w - CH.r - X(opts.fallAt)), height: CH.h - CH.t - CH.b, fill: 'var(--bad)', opacity: 0.1 }, svg);
+  }
+  for (const s of series) {
+    let dstr = '';
+    for (let i = 0; i < s.t.length; i += 1) dstr += `${i ? 'L' : 'M'}${X(s.t[i]).toFixed(1)},${Y(Math.min(s.v[i], yMax)).toFixed(1)}`;
+    svgEl('path', { d: dstr, fill: 'none', stroke: s.color, 'stroke-width': s.dash ? 1.4 : 2, 'stroke-dasharray': s.dash ? '4 3' : 'none', opacity: s.dash ? 0.75 : 1, 'stroke-linejoin': 'round' }, svg);
+  }
+  const cursor = svgEl('line', { x1: 0, x2: 0, y1: CH.t, y2: CH.h - CH.b, stroke: 'var(--accent)', 'stroke-width': 1.2 }, svg);
+  svg._cursor = cursor; svg._X = X;
+}
+function legend(el, items) {
+  el.innerHTML = items.map((i) => `<span><i class="${i.dash ? 'dash' : ''}" style="border-color:${i.color}"></i>${i.label}</span>`).join('');
+}
+function drawCharts() {
+  const d = state.data[state.current], n = state.data.normal;
+  if (!d || !n) return;
+  const lbl = state.manifest.groups;
+  const act = [], force = [], li = [];
+  for (const g of CHART_GROUPS) {
+    const c = GROUP_COLORS[g];
+    if (state.current !== 'normal') {
+      act.push({ t: n.time.a, v: n.series[g].act, color: c, dash: true });
+      force.push({ t: n.time.a, v: n.series[g].force, color: c, dash: true });
+    }
+    act.push({ t: d.time.a, v: d.series[g].act, color: c });
+    force.push({ t: d.time.a, v: d.series[g].force, color: c });
+    li.push({ color: c, label: `${lbl[g]} (bu senaryo)` });
+    if (state.current !== 'normal') li.push({ color: c, dash: true, label: 'normal' });
+  }
+  const fallAt = d.info.fell_at_s;
+  drawChart($('cAct'), act, 1, { fallAt });
+  const fMax = niceMax(Math.max(...force.map((s) => Math.max(...s.v))));
+  drawChart($('cForce'), force, fMax, { fallAt });
+  legend($('lAct'), li); legend($('lForce'), li);
+  const err = [];
+  if (state.current !== 'normal') err.push({ t: n.time.a, v: n.error.a, color: '#8b94ad', dash: true });
+  err.push({ t: d.time.a, v: d.error.a, color: '#8f7cff' });
+  drawChart($('cErr'), err, 0.3, { threshold: state.manifest.threshold_rad, fallAt });
+  legend($('lErr'), [{ color: '#8f7cff', label: 'bu senaryo' }, ...(state.current !== 'normal' ? [{ color: '#8b94ad', dash: true, label: 'normal' }] : []),
+    { color: 'var(--warn)', dash: true, label: `eşik ${state.manifest.threshold_rad} rad` }]);
+}
+function moveCursors() {
+  for (const id of ['cAct', 'cForce', 'cErr']) {
+    const svg = $(id); if (!svg._cursor) continue;
+    const x = svg._X(Math.min(state.t, state.duration));
+    svg._cursor.setAttribute('x1', x); svg._cursor.setAttribute('x2', x);
+  }
+}
+
+/* ---------- panels ---------- */
+function evalCount(key) {
+  const ev = state.manifest.evaluation || {};
+  if (key === 'both_adapted') return ev.adapted?.[EVAL_KEYS.both];
+  return ev.original?.[EVAL_KEYS[key]];
+}
+function pillFor(c) {
+  if (!c) return '';
+  const cls = c.walked === 6 ? 'good' : c.walked === 0 ? 'bad' : 'warn';
+  return `<span class="pill ${cls}">${c.walked}/6 yürüdü</span>`;
+}
+function buildPanels() {
+  const man = state.manifest;
+  $('scenarios').innerHTML = man.scenarios.map((s) => `
+    <button class="scn" role="radio" aria-checked="${s.key === state.current}" data-key="${s.key}">
+      <span class="dot"></span><span class="name">${s.label}</span>${pillFor(evalCount(s.key))}
+    </button>`).join('');
+  $('scenarios').querySelectorAll('.scn').forEach((b) => b.addEventListener('click', () => select(b.dataset.key)));
+
+  const order = ['gluteus_medius', 'gluteus_maximus', 'hip_flexors', 'hamstrings', 'vasti', 'gastrocnemius', 'soleus', 'tibialis_anterior', 'other'];
+  const counts = {};
+  man.muscles.forEach((m) => { counts[m.group] = (counts[m.group] || 0) + 1; });
+  $('groups').innerHTML = order.filter((g) => counts[g]).map((g) => `
+    <label class="grp"><input type="checkbox" data-g="${g}"><span class="swatch" style="background:${GROUP_COLORS[g]}"></span>
+      <span>${man.groups[g] || 'Diğer bacak kasları'}</span><span class="cap" data-cap="${g}"></span></label>`).join('');
+  $('groups').querySelectorAll('input').forEach((i) => i.addEventListener('change', () => {
+    if (i.checked) state.highlight.add(i.dataset.g); else state.highlight.delete(i.dataset.g);
+  }));
+
+  const taus = man.muscles.map((m) => m.tau_act).sort((a, b) => a - b);
+  const taud = man.muscles.map((m) => m.tau_deact).sort((a, b) => a - b);
+  const med = (a) => a[Math.floor(a.length / 2)];
+  $('modelInfo').innerHTML = `
+    <dt>Model</dt><dd>MS-Human-700</dd>
+    <dt>Bacak kası (aktüatör)</dt><dd>${man.muscles.length}</dd>
+    <dt>Aktivasyon süresi τ<sub>act</sub></dt><dd>${Math.round(med(taus) * 1000)} ms</dd>
+    <dt>Gevşeme süresi τ<sub>deact</sub></dt><dd>${Math.round(med(taud) * 1000)} ms</dd>
+    <dt>Kontrol adımı</dt><dd>${Math.round(man.dt * 1000)} ms</dd>`;
+
+  const cards = ['normal', 'glmed', 'glmax', 'both', 'both_adapted'];
+  $('cmp').innerHTML = cards.map((k) => {
+    const c = evalCount(k);
+    const cls = !c ? 'warn' : c.walked === 6 ? 'good' : c.walked === 0 ? 'bad' : 'warn';
+    const mark = cls === 'good' ? '✓' : cls === 'bad' ? '✕' : '~';
+    return `<button data-key="${k}"><span class="hd">${SHORT[k]}</span>${figure(cls)}
+      <span class="mark ${cls}" aria-hidden="true">${mark}</span><span class="count">${c ? `${c.walked}/6 yürüdü` : '—'}</span></button>`;
+  }).join('');
+  $('cmp').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => select(b.dataset.key)));
+
+  const o = man.evaluation?.original || {}, a = man.evaluation?.adapted || {};
+  const line = (ok, text, c) => `<li><span class="mark ${ok}">${ok === 'good' ? '✓' : ok === 'bad' ? '✕' : '~'}</span><span>${text}</span><span class="pill ${ok}">${c ? `${c.walked}/6` : ''}</span></li>`;
+  const st = (c) => (!c ? 'warn' : c.walked === 6 ? 'good' : c.walked === 0 ? 'bad' : 'warn');
+  $('checks').innerHTML = [
+    line(st(o[EVAL_KEYS.glmed]), 'Gluteus medius tek başına %20: model telafi ediyor', o[EVAL_KEYS.glmed]),
+    line(st(o[EVAL_KEYS.glmax]), 'Gluteus maksimus tek başına %20: model telafi ediyor', o[EVAL_KEYS.glmax]),
+    line(st(o[EVAL_KEYS.both]), 'İkisi birlikte %20: yürüyüş sürdürülemiyor', o[EVAL_KEYS.both]),
+    line(st(a[EVAL_KEYS.both]), 'Kontrolcü zayıflığa alışınca: kısmen telafi', a[EVAL_KEYS.both]),
+    line(st(a[EVAL_KEYS.normal]), 'Alışmış kontrolcü sağlam modelde: normal yürüyüş bozuluyor', a[EVAL_KEYS.normal]),
+  ].join('');
+
+  const fmt = (c) => (c ? `6 denemenin ${c.walked}'${c.walked === 6 ? 'sında' : 'ünde'} yürüdü` : '');
+  $('findings').innerHTML = `
+    <p><b>Etkileşim:</b> Sağ kalçanın iki kası ayrı ayrı %20'ye inince model yürüyor; ikisi birlikte inince ${o[EVAL_KEYS.both] ? `6 denemenin ${o[EVAL_KEYS.both].fell}'inde düştü` : 'düşüyor'}. Etki iki kasın toplamından büyük.</p>
+    <p><b>Uyum:</b> Kontrolcü bu zayıflıkla 100 bin adım yeniden eğitilince ${a[EVAL_KEYS.both] ? `${a[EVAL_KEYS.both].walked}/6` : '—'} denemede yürüdü. Telafi mümkün ama tam değil.</p>
+    <p><b>Bedel:</b> Alışmış kontrolcü sağlam modelde ${a[EVAL_KEYS.normal] ? `6 denemenin ${a[EVAL_KEYS.normal].fell}'inde düştü` : 'bozuldu'}; zayıflığa göre özelleşti.</p>`;
+  const shown = man.scenarios.find((s) => s.key === 'both_adapted');
+  const odd = man.scenarios.filter((s) => { const c = evalCount(s.key); return c && (s.outcome === 'walked') !== (c.walked >= 4); });
+  $('method').textContent = `Yöntem: MuJoCo, MS-Human-700 kas-iskelet modeli ve yayımlanmış LocomotionLegs kontrolcüsü. Zayıflık, seçilen kasların aktif kuvvetini %20'ye indirerek uygulandı; pasif kuvvet değişmedi. 3D sahnedeki her senaryo tek bir kayıttır${shown ? ` (alışmış kontrolcü için başlangıçta küçük gürültü olan deneme ${shown.seed + 1})` : ''}; sayılar 6 denemelik değerlendirmeden gelir (1 gürültüsüz başlangıç + 5 küçük başlangıç gürültülü deneme). Yürüdü: eklem sapması ${man.threshold_rad} rad eşiğinin altında kaldı. Düştü: pelvis yüksekliği başlangıcın %${Math.round(man.fall_ratio * 100)}'inin altına indi. Gerçekçi anatomi modeli: Z-Anatomy (CC BY-SA 4.0), kemikleri simülasyon iskeletine oturtularak bağlandı; kas renkleri eşleşen simülasyon kaslarının aktivasyonundan gelir, eşleşmeyen kaslar sabit renktedir.${odd.length ? ` Not: ${odd.map((s) => `"${s.label}"`).join(', ')} kaydı, 6 denemelik değerlendirmenin çoğunluk sonucundan farklı çıktı. Bu senaryo yürüme eşiğine çok yakın ve hesaplama ortamındaki küçük sayısal farklara duyarlı (kayıtlar Colab'da, değerlendirme bu bilgisayarda yapıldı).` : ''}`;
+}
+function figure(cls) {
+  const col = cls === 'good' ? 'var(--fg)' : cls === 'bad' ? 'var(--bad)' : 'var(--warn)';
+  return `<svg width="34" height="44" viewBox="0 0 34 44" aria-hidden="true"><circle cx="18" cy="6" r="4" fill="${col}"/>
+    <path d="M17 11 L14 24 L19 30 L16 41 M14 24 L9 38 M17 12 L23 19 M16 14 L10 20" fill="none" stroke="${col}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function refreshSelection() {
+  const d = state.data[state.current];
+  document.querySelectorAll('.scn').forEach((b) => b.setAttribute('aria-checked', b.dataset.key === state.current));
+  document.querySelectorAll('#cmp button').forEach((b) => b.setAttribute('aria-current', b.dataset.key === state.current));
+  const weak = new Set(d.info.groups.map((g) => g.replace('right_', '')));
+  document.querySelectorAll('[data-cap]').forEach((el) => { el.textContent = weak.has(el.dataset.cap) ? `sağ %${Math.round(d.info.capacity * 100)}` : ''; });
+  $('hudTitle').textContent = d.info.label;
+  $('hudSub').textContent = d.info.controller === 'adapted' ? 'Zayıflığa alışmış kontrolcü' : 'Yayımlanmış kontrolcü, yeniden eğitim yok';
+  drawCharts();
+}
+async function select(key) {
+  state.current = key;
+  $('loading').hidden = false; $('loading').textContent = 'Senaryo yükleniyor…';
+  try { await scenarioData(key); } catch (e) { $('loading').textContent = 'Senaryo verisi okunamadı.'; return; }
+  $('loading').hidden = true;
+  state.t = 0; state.playing = true; setPlayIcon();
+  refreshSelection();
+}
+
+/* ---------- transport ---------- */
+function setPlayIcon() {
+  $('play').setAttribute('aria-label', state.playing ? 'Duraklat' : 'Oynat');
+  $('playIcon').innerHTML = state.playing
+    ? '<rect x="2" y="1" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="8.5" y="1" width="3.5" height="12" rx="1" fill="currentColor"/>'
+    : '<path d="M3 1.5 L12 7 L3 12.5 Z" fill="currentColor"/>';
+}
+$('play').addEventListener('click', () => { state.playing = !state.playing; setPlayIcon(); });
+$('restart').addEventListener('click', () => { state.t = 0; state.playing = true; setPlayIcon(); });
+$('speed').addEventListener('change', (e) => (state.speed = Number(e.target.value)));
+$('scrub').addEventListener('input', (e) => { state.t = (Number(e.target.value) / 1000) * state.duration; state.playing = false; setPlayIcon(); });
+$('modeAct').addEventListener('click', () => setMode('act'));
+$('modeGroup').addEventListener('click', () => setMode('group'));
+function setMode(m) { state.mode = m; $('modeAct').setAttribute('aria-pressed', m === 'act'); $('modeGroup').setAttribute('aria-pressed', m === 'group'); }
+
+function updateHud() {
+  const d = state.data[state.current];
+  if (!d) return;
+  const [f0] = frameAt(d, state.t);
+  const cycle = Math.round(((state.t % 1.17) / 1.17) * 100);
+  $('clock').textContent = `${Math.min(state.t, state.duration).toFixed(2)} s · döngü %${cycle}`;
+  $('scrub').value = Math.round((state.t / state.duration) * 1000);
+  const fell = d.info.fell_at_s;
+  const st = $('hudStatus');
+  if (fell != null && state.t >= fell) { st.textContent = `DÜŞTÜ · ${fell.toFixed(2)} s`; st.className = 'status bad'; }
+  else if (state.t >= d.end && d.info.outcome === 'walked') { st.textContent = '3 adım döngüsü tamam'; st.className = 'status good'; }
+  else if (d.error.a[f0] > state.manifest.threshold_rad) { st.textContent = 'Referanstan sapıyor'; st.className = 'status warn'; }
+  else { st.textContent = 'Yürüyor'; st.className = 'status good'; }
+  $('hudMetric').textContent = `eklem sapması ${d.error.a[f0].toFixed(3)} rad · pelvis ${d.pelvis_h.a[f0].toFixed(2)} m`;
+}
+
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (state.playing && state.data[state.current]) {
+    state.t += dt * state.speed;
+    if (state.t > state.duration + 0.6) state.t = 0;
+  }
+  render3D(); updateHud(); moveCursors();
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(loop);
+}
+
+async function start() {
+  try {
+    state.manifest = await loadJSON('data/manifest.json');
+    $('loading').textContent = 'Kemik modelleri yükleniyor…';
+    const meshBuf = await loadBin('data/meshes.bin');
+    buildModel(meshBuf);
+    await scenarioData('normal');
+    await scenarioData(state.current);
+    state.duration = Math.max(...state.manifest.scenarios.map((s) => s.arrays.time.shape[0])) * state.manifest.dt;
+    buildPanels();
+    refreshSelection();
+    $('loading').hidden = true;
+    $('headNote').textContent = `${state.manifest.muscles.length} kas · ${state.manifest.geoms.length} kemik parçası · önceden hesaplanmış kayıtlar`;
+    for (const s of state.manifest.scenarios) scenarioData(s.key).catch(() => {});
+    $('headNote').textContent += ' · anatomi modeli yükleniyor…';
+    Promise.all([loadJSON('data/anatomy.json'), loadBin('data/anatomy.bin')])
+      .then(([spec, buf]) => {
+        buildAnatomy(spec, buf);
+        $('headNote').textContent = `${state.manifest.muscles.length} simülasyon kası · ${anat.muscles.length} anatomik kas · önceden hesaplanmış kayıtlar`;
+      })
+      .catch((e) => { console.error(e); setView('schem'); $('headNote').textContent = 'Anatomi modeli yüklenemedi; simülasyon kasları gösteriliyor.'; });
+  } catch (e) {
+    $('loading').textContent = 'Veri dosyaları bulunamadı. Sayfa, data/ klasöründeki kayıtlarla birlikte açılmalı.';
+    console.error(e);
+  }
+  resize();
+  requestAnimationFrame(loop);
+}
+start();
+</script>
