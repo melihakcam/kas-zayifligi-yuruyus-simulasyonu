@@ -118,6 +118,8 @@ def main():
                 eps = list(self.model.ep_info_buffer)[-20:]
                 row = {'steps': int(n), 'seconds': round(time.time() - self.start, 1),
                        'steps_per_s': round(self.num_timesteps / max(1e-9, time.time() - self.start), 1),
+                       'remaining_min': round((args.steps - n) / max(1e-9, self.num_timesteps)
+                                              * (time.time() - self.start) / 60),
                        'episode_length_mean': float(np.mean([e['l'] for e in eps])) if eps else None,
                        'episode_reward_mean': float(np.mean([e['r'] for e in eps])) if eps else None}
                 self.rows.append(row)
