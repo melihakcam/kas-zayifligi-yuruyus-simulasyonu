@@ -40,6 +40,13 @@ FALL_RATIO = 0.7
 _worker = {}
 
 
+def _constant_zero(_):
+    return 0.0
+
+
+INFERENCE_OBJECTS = {'buffer_size': 1, 'learning_rate': 0.0, 'lr_schedule': _constant_zero}
+
+
 def init_worker(model_path=None, env_path=None):
     os.environ.setdefault('OMP_NUM_THREADS', '1')
     import torch
@@ -49,9 +56,10 @@ def init_worker(model_path=None, env_path=None):
     from DynSyn import SAC_DynSyn
     checkpoint = ROOT / 'vendor/checkpoints/LocomotionLegs'
     _worker['config'] = json.loads((checkpoint / 'locomotionLegs.json').read_text())
-    # Inference only: skip the ~2.8 GiB training replay buffer.
+    # Inference only: skip the ~2.8 GiB training replay buffer, and do not unpickle
+    # the saved learning-rate function (its bytecode is Python-version specific).
     _worker['policy'] = SAC_DynSyn.load(str(model_path or checkpoint / 'checkpoint/best_model.zip'), device='cpu',
-                                        custom_objects={'buffer_size': 1})
+                                        custom_objects=INFERENCE_OBJECTS)
     _worker['env_path'] = str(env_path or checkpoint / 'checkpoint/best_env.zip')
 
 

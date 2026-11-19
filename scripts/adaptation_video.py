@@ -28,7 +28,7 @@ def record(groups, capacity, model_path, env_path):
     from DynSyn import SAC_DynSyn
     from wrapper import MuscleNormWrapper
     config = sweep._worker['config']
-    policy = SAC_DynSyn.load(str(model_path), device='cpu', custom_objects={'buffer_size': 1})
+    policy = SAC_DynSyn.load(str(model_path), device='cpu', custom_objects=sweep.INFERENCE_OBJECTS)
     options = dict(config['single_env_kwargs'])
     options.update(random_init=False, reset_noise_scale=0.0, gait_cycles=3, qpos_diff_th=1e9)
     env = MuscleNormWrapper(gym.make(config['env_name'], render_mode=None, **options))
