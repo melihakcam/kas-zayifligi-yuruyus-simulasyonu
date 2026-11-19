@@ -1,0 +1,23 @@
+[
+ {
+  "steps": 1000,
+  "seconds": 58.2,
+  "steps_per_s": 17.2,
+  "episode_length_mean": 13.1,
+  "episode_reward_mean": 378.11567395000003
+ },
+ {
+  "steps": 2000,
+  "seconds": 94.4,
+  "steps_per_s": 21.2,
+  "episode_length_mean": 24.55,
+  "episode_reward_mean": 692.20175915
+ },
+ {
+  "steps": 3000,
+  "seconds": 134.1,
+  "steps_per_s": 22.4,
+  "episode_length_mean": 31.7,
+  "episode_reward_mean": 865.3713905500001
+ }
+]

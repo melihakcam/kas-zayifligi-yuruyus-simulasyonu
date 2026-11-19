@@ -1,0 +1,192 @@
+{
+  "scope": "Right ankle/foot relaxation of the fixed recorded trajectory; free initial activation",
+  "joints": [
+    "ankle_angle_r",
+    "subtalar_angle_r",
+    "mtp_angle_r"
+  ],
+  "muscles": [
+    "edl_r",
+    "ehl_r",
+    "fdl_r",
+    "fhl_r",
+    "gaslat_r",
+    "gasmed_r",
+    "perbrev_r",
+    "perlong_r",
+    "soleus_r",
+    "tibant_r",
+    "tibpost_r"
+  ],
+  "sample_count": 586,
+  "physics_timestep_s": 0.002,
+  "scenarios": [
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 1.4210854715202004e-14,
+      "remaining_active_capacity": 1.0,
+      "activation_time_constant_scale": null
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 4.841641424787585e-09,
+      "remaining_active_capacity": 1.0,
+      "activation_time_constant_scale": 1.0
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 5.370740807303752e-09,
+      "remaining_active_capacity": 1.0,
+      "activation_time_constant_scale": 0.5
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 1.4210854715202004e-14,
+      "remaining_active_capacity": 0.8,
+      "activation_time_constant_scale": null
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0373619775344941,
+      "numerical_dual_lower_bound_Nm": 0.03736197753449458,
+      "dual_stationarity_error": 5.856739370362098e-13,
+      "dual_sign_error": 9.614253122423049e-09,
+      "primal_dual_gap": -4.787836793695988e-16,
+      "max_constraint_violation": 4.841072375986691e-09,
+      "remaining_active_capacity": 0.8,
+      "activation_time_constant_scale": 1.0
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 4.111686469200154e-09,
+      "remaining_active_capacity": 0.8,
+      "activation_time_constant_scale": 0.5
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 1.4210854715202004e-14,
+      "remaining_active_capacity": 0.6,
+      "activation_time_constant_scale": null
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 1.9706156646479513,
+      "numerical_dual_lower_bound_Nm": 1.9706156646479498,
+      "dual_stationarity_error": 3.552713678800501e-15,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 1.5543122344752192e-15,
+      "max_constraint_violation": 9.848906452487886e-09,
+      "remaining_active_capacity": 0.6,
+      "activation_time_constant_scale": 1.0
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 9.131856598817004e-09,
+      "remaining_active_capacity": 0.6,
+      "activation_time_constant_scale": 0.5
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 1.4210854715202004e-14,
+      "remaining_active_capacity": 0.5,
+      "activation_time_constant_scale": null
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 3.0922975409043203,
+      "numerical_dual_lower_bound_Nm": 3.0922975409043194,
+      "dual_stationarity_error": 1.7763568394002505e-15,
+      "dual_sign_error": 4.811073558909041e-09,
+      "primal_dual_gap": 8.881784197001252e-16,
+      "max_constraint_violation": 9.64443975769176e-09,
+      "remaining_active_capacity": 0.5,
+      "activation_time_constant_scale": 1.0
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 8.040797131575592e-09,
+      "remaining_active_capacity": 0.5,
+      "activation_time_constant_scale": 0.5
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 1.4210854715202004e-14,
+      "remaining_active_capacity": 0.4,
+      "activation_time_constant_scale": null
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 4.213979462608417,
+      "numerical_dual_lower_bound_Nm": 4.213979462608415,
+      "dual_stationarity_error": 8.881784197001252e-16,
+      "dual_sign_error": 6.464104730579312e-09,
+      "primal_dual_gap": 1.7763568394002505e-15,
+      "max_constraint_violation": 9.809811229559897e-09,
+      "remaining_active_capacity": 0.4,
+      "activation_time_constant_scale": 1.0
+    },
+    {
+      "status": "optimal",
+      "minimum_max_torque_error_Nm": 0.0,
+      "numerical_dual_lower_bound_Nm": 0.0,
+      "dual_stationarity_error": 0.0,
+      "dual_sign_error": 0.0,
+      "primal_dual_gap": 0.0,
+      "max_constraint_violation": 4.644261142886387e-09,
+      "remaining_active_capacity": 0.4,
+      "activation_time_constant_scale": 0.5
+    }
+  ],
+  "interpretation": "Positive verified LP optimum is a numerical lower bound on required torque error, conditional on the model and recorded states.",
+  "baseline_witness_torque_error": 1.4210854715202004e-14
+}

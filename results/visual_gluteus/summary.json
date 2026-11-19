@@ -1,0 +1,41 @@
+{
+  "capacity": 0.2,
+  "scope": "Published controller, deterministic start, active force only, no retraining",
+  "panels": [
+    {
+      "name": "normal",
+      "groups": [],
+      "fell_at_s": null,
+      "max_mean_coordinate_error_rad": 0.05028889356754196,
+      "duration_s": 3.499999999999836
+    },
+    {
+      "name": "gluteus_medius",
+      "groups": [
+        "right_gluteus_medius"
+      ],
+      "fell_at_s": null,
+      "max_mean_coordinate_error_rad": 0.05399743698690346,
+      "duration_s": 3.499999999999836
+    },
+    {
+      "name": "gluteus_maximus",
+      "groups": [
+        "right_gluteus_maximus"
+      ],
+      "fell_at_s": null,
+      "max_mean_coordinate_error_rad": 0.053947266972158334,
+      "duration_s": 3.499999999999836
+    },
+    {
+      "name": "both",
+      "groups": [
+        "right_gluteus_medius",
+        "right_gluteus_maximus"
+      ],
+      "fell_at_s": 3.2599999999998626,
+      "max_mean_coordinate_error_rad": 0.34053079868151576,
+      "duration_s": 3.499999999999836
+    }
+  ]
+}

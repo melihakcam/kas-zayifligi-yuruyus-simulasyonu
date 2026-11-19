@@ -1,0 +1,493 @@
+{
+  "scope": "fixed sampled baseline torque; active capacity scaled; passive force unchanged",
+  "physiological_dynamic_feasibility_proven": false,
+  "envelope": "optimistic necessary bounds, free initial activation, open horizon",
+  "window_start_s": 1.2,
+  "window_duration_s": 1.0,
+  "sample_count": 51,
+  "baseline_witness_torque_error": 4.547473508864641e-13,
+  "baseline_witness_envelope_violation": 0.0,
+  "groups": {
+    "right_vasti": [
+      "vasint_r",
+      "vaslat_r",
+      "vasmed_r"
+    ],
+    "right_hamstrings": [
+      "bflh_r",
+      "semimem_r",
+      "semiten_r"
+    ],
+    "right_soleus": [
+      "soleus_r"
+    ],
+    "right_gastrocnemius": [
+      "gasmed_r",
+      "gaslat_r"
+    ],
+    "right_tibialis_anterior": [
+      "tibant_r"
+    ]
+  },
+  "scenarios": [
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 1.1368683772161603e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_hamstrings"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 1.8189894035458565e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_soleus"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 1.1368683772161603e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_gastrocnemius"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 1.8189894035458565e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti",
+        "right_hamstrings"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti",
+        "right_soleus"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti",
+        "right_gastrocnemius"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti",
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_hamstrings",
+        "right_soleus"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 1.8189894035458565e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_hamstrings",
+        "right_gastrocnemius"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 9.094947017729282e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_hamstrings",
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 9.094947017729282e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_soleus",
+        "right_gastrocnemius"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 8.640199666842818e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_soleus",
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 1.8189894035458565e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_gastrocnemius",
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 1.1368683772161603e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_hamstrings"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 1.8189894035458565e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_soleus"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_gastrocnemius"
+      ],
+      "independent": {
+        "status": "infeasible",
+        "solver_status": 2
+      },
+      "optimistic_envelope": {
+        "status": "not_evaluated"
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti",
+        "right_hamstrings"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti",
+        "right_soleus"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 1.8189894035458565e-12
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti",
+        "right_gastrocnemius"
+      ],
+      "independent": {
+        "status": "infeasible",
+        "solver_status": 2
+      },
+      "optimistic_envelope": {
+        "status": "not_evaluated"
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti",
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_hamstrings",
+        "right_soleus"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_hamstrings",
+        "right_gastrocnemius"
+      ],
+      "independent": {
+        "status": "infeasible",
+        "solver_status": 2
+      },
+      "optimistic_envelope": {
+        "status": "not_evaluated"
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_hamstrings",
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_soleus",
+        "right_gastrocnemius"
+      ],
+      "independent": {
+        "status": "infeasible",
+        "solver_status": 2
+      },
+      "optimistic_envelope": {
+        "status": "not_evaluated"
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_soleus",
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 2.0463630789890885e-12
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "max_torque_residual": 6.821210263296962e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_gastrocnemius",
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "infeasible",
+        "solver_status": 2
+      },
+      "optimistic_envelope": {
+        "status": "not_evaluated"
+      }
+    }
+  ]
+}

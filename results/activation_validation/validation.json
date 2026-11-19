@@ -1,0 +1,507 @@
+{
+  "scope": "Fixed recorded states, active capacity scaled, passive forces unchanged; free initial activation; open horizon",
+  "interpretation": "Certified cases have verified native Euler activation witnesses. Not-certified cases are inconclusive.",
+  "source": "https://github.com/google-deepmind/mujoco/blob/3.17.0/src/engine/engine_util_misc.c",
+  "sample_count": 586,
+  "first_time_s": 1.1700000000000008,
+  "last_time_s": 2.339999999999964,
+  "physics_timestep_s": 0.002,
+  "baseline_original_control_step_error": 0.0,
+  "groups": {
+    "right_vasti": [
+      "vasint_r",
+      "vaslat_r",
+      "vasmed_r"
+    ],
+    "right_hamstrings": [
+      "bflh_r",
+      "semimem_r",
+      "semiten_r"
+    ],
+    "right_soleus": [
+      "soleus_r"
+    ],
+    "right_gastrocnemius": [
+      "gasmed_r",
+      "gaslat_r"
+    ],
+    "right_tibialis_anterior": [
+      "tibant_r"
+    ]
+  },
+  "scenarios": [
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rechecked_saved_witness",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.8,
+      "groups": [],
+      "witness_file": "0.80_baseline.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rechecked_saved_witness",
+      "max_torque_error": 3.410605131648481e-11,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti"
+      ],
+      "witness_file": "0.80_right_vasti.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rechecked_saved_witness",
+      "max_torque_error": 5.229594535194337e-12,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_hamstrings"
+      ],
+      "witness_file": "0.80_right_hamstrings.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_soleus"
+      ],
+      "witness_file": "0.80_right_soleus.npz"
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rechecked_saved_witness",
+      "max_torque_error": 1.0759038104879437e-10,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti",
+        "right_hamstrings"
+      ],
+      "witness_file": "0.80_right_vasti+right_hamstrings.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti",
+        "right_soleus"
+      ],
+      "witness_file": "0.80_right_vasti+right_soleus.npz"
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti",
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_vasti",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_hamstrings",
+        "right_soleus"
+      ],
+      "witness_file": "0.80_right_hamstrings+right_soleus.npz"
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_hamstrings",
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_hamstrings",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_soleus",
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_soleus",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_gastrocnemius",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti"
+      ],
+      "witness_file": "0.60_right_vasti.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_hamstrings"
+      ],
+      "witness_file": "0.60_right_hamstrings.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_soleus"
+      ],
+      "witness_file": "0.60_right_soleus.npz"
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti",
+        "right_hamstrings"
+      ],
+      "witness_file": "0.60_right_vasti+right_hamstrings.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti",
+        "right_soleus"
+      ],
+      "witness_file": "0.60_right_vasti+right_soleus.npz"
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti",
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_vasti",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_hamstrings",
+        "right_soleus"
+      ],
+      "witness_file": "0.60_right_hamstrings+right_soleus.npz"
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_hamstrings",
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_hamstrings",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_soleus",
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_soleus",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_gastrocnemius",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_vasti"
+      ],
+      "witness_file": "0.40_right_vasti.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_hamstrings"
+      ],
+      "witness_file": "0.40_right_hamstrings.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_soleus"
+      ],
+      "witness_file": "0.40_right_soleus.npz"
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_vasti",
+        "right_hamstrings"
+      ],
+      "witness_file": "0.40_right_vasti+right_hamstrings.npz"
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_vasti",
+        "right_soleus"
+      ],
+      "witness_file": "0.40_right_vasti+right_soleus.npz"
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_vasti",
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_vasti",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "certified_fixed_trajectory",
+      "construction": "rescaled_recorded_activation",
+      "max_torque_error": 9.094947017729282e-13,
+      "max_excitation_bound_violation": 0.0,
+      "max_native_activation_step_error": 5.551115123125783e-17,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_hamstrings",
+        "right_soleus"
+      ],
+      "witness_file": "0.40_right_hamstrings+right_soleus.npz"
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_hamstrings",
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_hamstrings",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_soleus",
+        "right_gastrocnemius"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_soleus",
+        "right_tibialis_anterior"
+      ]
+    },
+    {
+      "status": "not_certified",
+      "solver_status": 2,
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_gastrocnemius",
+        "right_tibialis_anterior"
+      ]
+    }
+  ],
+  "compensation_scope": "39 right-leg muscles optimized; all other activations fixed to baseline"
+}

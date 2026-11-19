@@ -1,0 +1,194 @@
+{
+  "kind": "synthetic numerical check",
+  "physiological_evidence": false,
+  "scope": "two fixed time instants, arbitrary force units, complete actuator removal",
+  "independent_infeasibility_check": {
+    "required_change_C": 0.35,
+    "allowed_change_C": 0.1
+  },
+  "scenarios": {
+    "baseline": {
+      "independent": {
+        "feasible": true,
+        "solver_status": 0,
+        "forces": [
+          [
+            0.45,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.8
+          ]
+        ]
+      },
+      "time_linked": {
+        "feasible": true,
+        "solver_status": 0,
+        "forces": [
+          [
+            0.0,
+            0.0,
+            0.45
+          ],
+          [
+            -0.0,
+            0.45,
+            0.35
+          ]
+        ]
+      }
+    },
+    "A": {
+      "independent": {
+        "feasible": true,
+        "solver_status": 0,
+        "forces": [
+          [
+            0.0,
+            0.45,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.8
+          ]
+        ]
+      },
+      "time_linked": {
+        "feasible": true,
+        "solver_status": 0,
+        "forces": [
+          [
+            0.0,
+            0.0,
+            0.45
+          ],
+          [
+            0.0,
+            0.45,
+            0.35000000000000003
+          ]
+        ]
+      }
+    },
+    "B": {
+      "independent": {
+        "feasible": true,
+        "solver_status": 0,
+        "forces": [
+          [
+            0.45,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.8
+          ]
+        ]
+      },
+      "time_linked": {
+        "feasible": true,
+        "solver_status": 0,
+        "forces": [
+          [
+            0.0,
+            0.0,
+            0.45
+          ],
+          [
+            0.45,
+            0.0,
+            0.35000000000000003
+          ]
+        ]
+      }
+    },
+    "C": {
+      "independent": {
+        "feasible": true,
+        "solver_status": 0,
+        "forces": [
+          [
+            0.45,
+            0.0,
+            0.0
+          ],
+          [
+            0.35000000000000003,
+            0.45,
+            0.0
+          ]
+        ]
+      },
+      "time_linked": {
+        "feasible": true,
+        "solver_status": 0,
+        "forces": [
+          [
+            0.45,
+            0.0,
+            0.0
+          ],
+          [
+            0.35000000000000003,
+            0.45,
+            0.0
+          ]
+        ]
+      }
+    },
+    "A+B": {
+      "independent": {
+        "feasible": true,
+        "solver_status": 0,
+        "forces": [
+          [
+            0.0,
+            0.0,
+            0.45
+          ],
+          [
+            0.0,
+            0.0,
+            0.8
+          ]
+        ]
+      },
+      "time_linked": {
+        "feasible": false,
+        "solver_status": 2,
+        "forces": null
+      }
+    },
+    "A+C": {
+      "independent": {
+        "feasible": false,
+        "solver_status": 2,
+        "forces": null
+      },
+      "time_linked": {
+        "feasible": false,
+        "solver_status": 2,
+        "forces": null
+      }
+    },
+    "B+C": {
+      "independent": {
+        "feasible": false,
+        "solver_status": 2,
+        "forces": null
+      },
+      "time_linked": {
+        "feasible": false,
+        "solver_status": 2,
+        "forces": null
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "scope": "Matched initial conditions and published controller; active tibant_r weakness only; no retraining",
+  "interpretation": "Forward response illustrates this controller. It does not prove impossibility for other controllers.",
+  "rollouts": [
+    {
+      "capacity": 1.0,
+      "final": {
+        "time_s": 3.519999999999834,
+        "healthy": true,
+        "mean_coordinate_error": 0.02907735718518245
+      },
+      "physics_samples": 1760,
+      "active_force_scale_verified": true,
+      "passive_force_unchanged_verified": true
+    },
+    {
+      "capacity": 0.4,
+      "final": {
+        "time_s": 3.519999999999834,
+        "healthy": true,
+        "mean_coordinate_error": 0.030135653564146016
+      },
+      "physics_samples": 1760,
+      "active_force_scale_verified": true,
+      "passive_force_unchanged_verified": true
+    }
+  ],
+  "matched_initial_conditions_verified": true,
+  "max_right_ankle_difference_deg": 18.679136627441807,
+  "max_right_toe_body_height_difference_cm": 6.124467199527165
+}

@@ -1,0 +1,148 @@
+{
+  "scope": "fixed sampled baseline torque; active capacity scaled; passive force unchanged",
+  "physiological_dynamic_feasibility_proven": false,
+  "envelope": "optimistic necessary bounds, free initial activation, open horizon",
+  "window_start_s": 1.17,
+  "window_duration_s": 1.17,
+  "sample_count": 586,
+  "physics_timestep_s": 0.002,
+  "stride": 1,
+  "baseline_witness_torque_error": 9.094947017729282e-13,
+  "baseline_witness_envelope_violation": 0.0,
+  "groups": {
+    "right_vasti": [
+      "vasint_r",
+      "vaslat_r",
+      "vasmed_r"
+    ],
+    "right_hamstrings": [
+      "bflh_r",
+      "semimem_r",
+      "semiten_r"
+    ],
+    "right_soleus": [
+      "soleus_r"
+    ],
+    "right_gastrocnemius": [
+      "gasmed_r",
+      "gaslat_r"
+    ],
+    "right_tibialis_anterior": [
+      "tibant_r"
+    ]
+  },
+  "scenarios": [
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [],
+      "independent": {
+        "status": "feasible",
+        "construction": "recorded_baseline_witness",
+        "max_torque_residual": 9.094947017729282e-13
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "construction": "recorded_baseline_witness",
+        "max_torque_residual": 9.094947017729282e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.8,
+      "groups": [
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 5.002220859751105e-12
+      },
+      "optimistic_envelope": {
+        "status": "infeasible",
+        "solver_status": 2
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [],
+      "independent": {
+        "status": "feasible",
+        "construction": "recorded_baseline_witness",
+        "max_torque_residual": 9.094947017729282e-13
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "construction": "recorded_baseline_witness",
+        "max_torque_residual": 9.094947017729282e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "groups": [
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 5.002220859751105e-12
+      },
+      "optimistic_envelope": {
+        "status": "infeasible",
+        "solver_status": 2
+      }
+    },
+    {
+      "remaining_active_capacity": 0.5,
+      "groups": [],
+      "independent": {
+        "status": "feasible",
+        "construction": "recorded_baseline_witness",
+        "max_torque_residual": 9.094947017729282e-13
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "construction": "recorded_baseline_witness",
+        "max_torque_residual": 9.094947017729282e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.5,
+      "groups": [
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 5.002220859751105e-12
+      },
+      "optimistic_envelope": {
+        "status": "infeasible",
+        "solver_status": 2
+      }
+    },
+    {
+      "remaining_active_capacity": 0.4,
+      "groups": [],
+      "independent": {
+        "status": "feasible",
+        "construction": "recorded_baseline_witness",
+        "max_torque_residual": 9.094947017729282e-13
+      },
+      "optimistic_envelope": {
+        "status": "feasible",
+        "construction": "recorded_baseline_witness",
+        "max_torque_residual": 9.094947017729282e-13
+      }
+    },
+    {
+      "remaining_active_capacity": 0.4,
+      "groups": [
+        "right_tibialis_anterior"
+      ],
+      "independent": {
+        "status": "feasible",
+        "max_torque_residual": 5.002220859751105e-12
+      },
+      "optimistic_envelope": {
+        "status": "infeasible",
+        "solver_status": 2
+      }
+    }
+  ]
+}

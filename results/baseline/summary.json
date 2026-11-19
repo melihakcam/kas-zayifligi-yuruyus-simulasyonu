@@ -1,0 +1,24 @@
+{
+  "completed_requested_cycles": true,
+  "requested_cycles": 3,
+  "control_steps": 176,
+  "physics_samples": 1760,
+  "last_recorded_time_s": 3.517999999999834,
+  "physics_timestep_s": 0.002,
+  "integrator_id": 0,
+  "activation_dynamics": [
+    "mjDYN_MUSCLE"
+  ],
+  "last_control_state": {
+    "time_s": 3.519999999999834,
+    "healthy": true,
+    "mean_coordinate_error": 0.02907735718518245
+  },
+  "max_dynamics_residual_Nm_or_N": 0.0025702481747771344,
+  "max_abs_actuator_torque_Nm_or_N": 2817.404263456114,
+  "numpy_version": "2.4.2",
+  "mujoco_version": "3.17.0",
+  "torch_version": "2.10.0+cpu",
+  "reference_external_load_source": "recorded simulator constraints",
+  "scope": "published policy, deterministic reference start, no reset noise"
+}

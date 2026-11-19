@@ -1,0 +1,420 @@
+{
+  "checkpoint": "original",
+  "trained_on": {
+    "groups": [
+      "right_gluteus_medius",
+      "right_gluteus_maximus"
+    ],
+    "capacity": 0.2
+  },
+  "summary": {
+    "gluteus_medius+gluteus_maximus @0.20": {
+      "walked": 0,
+      "deviated": 1,
+      "fell": 5,
+      "max_errors": [
+        0.326,
+        0.241,
+        0.312,
+        0.282,
+        0.219,
+        0.342
+      ]
+    },
+    "gluteus_medius @0.20": {
+      "walked": 6,
+      "deviated": 0,
+      "fell": 0,
+      "max_errors": [
+        0.054,
+        0.059,
+        0.056,
+        0.053,
+        0.055,
+        0.058
+      ]
+    },
+    "gluteus_maximus @0.20": {
+      "walked": 6,
+      "deviated": 0,
+      "fell": 0,
+      "max_errors": [
+        0.054,
+        0.053,
+        0.045,
+        0.046,
+        0.051,
+        0.058
+      ]
+    },
+    "normal @1.00": {
+      "walked": 6,
+      "deviated": 0,
+      "fell": 0,
+      "max_errors": [
+        0.05,
+        0.057,
+        0.052,
+        0.051,
+        0.049,
+        0.047
+      ]
+    }
+  },
+  "results": [
+    {
+      "groups": [
+        "right_gluteus_medius",
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "fell",
+      "seed": 0,
+      "reset_noise_scale": 0.0,
+      "simulated_time_s": 3.2599999999998626,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": 0.2800000000000002,
+      "max_mean_coordinate_error_rad": 0.3260876777720537,
+      "mean_coordinate_error_rad": 0.09897421946627154,
+      "min_pelvis_height_ratio": 0.6622401173510516
+    },
+    {
+      "groups": [
+        "right_gluteus_medius"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 0,
+      "reset_noise_scale": 0.0,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.05399743698690346,
+      "mean_coordinate_error_rad": 0.03724739863314689,
+      "min_pelvis_height_ratio": 0.9387352732190829
+    },
+    {
+      "groups": [
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 0,
+      "reset_noise_scale": 0.0,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.053947266972158334,
+      "mean_coordinate_error_rad": 0.038143670809211605,
+      "min_pelvis_height_ratio": 0.9518687622906519
+    },
+    {
+      "groups": [],
+      "remaining_active_capacity": 1.0,
+      "outcome": "walked",
+      "seed": 0,
+      "reset_noise_scale": 0.0,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.05028889356754196,
+      "mean_coordinate_error_rad": 0.033666914106184935,
+      "min_pelvis_height_ratio": 0.9450382765537656
+    },
+    {
+      "groups": [
+        "right_gluteus_medius",
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "deviated",
+      "seed": 0,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": 0.18000000000000013,
+      "max_mean_coordinate_error_rad": 0.24068794226330442,
+      "mean_coordinate_error_rad": 0.0670559451449659,
+      "min_pelvis_height_ratio": 0.7041918780794912
+    },
+    {
+      "groups": [
+        "right_gluteus_medius",
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "fell",
+      "seed": 1,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.3599999999998515,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": 0.2800000000000002,
+      "max_mean_coordinate_error_rad": 0.3123450317463234,
+      "mean_coordinate_error_rad": 0.08884417863255523,
+      "min_pelvis_height_ratio": 0.6712692926435838
+    },
+    {
+      "groups": [
+        "right_gluteus_medius",
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "fell",
+      "seed": 2,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 1.6800000000000013,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": 0.2800000000000002,
+      "max_mean_coordinate_error_rad": 0.28237140627129403,
+      "mean_coordinate_error_rad": 0.10255976909097617,
+      "min_pelvis_height_ratio": 0.6634538903239179
+    },
+    {
+      "groups": [
+        "right_gluteus_medius",
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "fell",
+      "seed": 3,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 1.1600000000000008,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": 0.18000000000000013,
+      "max_mean_coordinate_error_rad": 0.2185628584695363,
+      "mean_coordinate_error_rad": 0.12323592757193881,
+      "min_pelvis_height_ratio": 0.6888893030301496
+    },
+    {
+      "groups": [
+        "right_gluteus_medius",
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "fell",
+      "seed": 4,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 2.9799999999998934,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": 0.2600000000000002,
+      "max_mean_coordinate_error_rad": 0.34185489608967085,
+      "mean_coordinate_error_rad": 0.08626207581113457,
+      "min_pelvis_height_ratio": 0.6811568085304361
+    },
+    {
+      "groups": [
+        "right_gluteus_medius"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 0,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.05906458408954994,
+      "mean_coordinate_error_rad": 0.03617904129413176,
+      "min_pelvis_height_ratio": 0.9429473750409068
+    },
+    {
+      "groups": [
+        "right_gluteus_medius"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 1,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.05618304164131275,
+      "mean_coordinate_error_rad": 0.0350429081673784,
+      "min_pelvis_height_ratio": 0.9436284946170411
+    },
+    {
+      "groups": [
+        "right_gluteus_medius"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 2,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.05256579929406291,
+      "mean_coordinate_error_rad": 0.0340976025761335,
+      "min_pelvis_height_ratio": 0.9317329708464326
+    },
+    {
+      "groups": [
+        "right_gluteus_medius"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 3,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.05496291262056627,
+      "mean_coordinate_error_rad": 0.035343104003446056,
+      "min_pelvis_height_ratio": 0.9333120753100371
+    },
+    {
+      "groups": [
+        "right_gluteus_medius"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 4,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.058124204549246127,
+      "mean_coordinate_error_rad": 0.03775221962617902,
+      "min_pelvis_height_ratio": 0.9428047439629911
+    },
+    {
+      "groups": [
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 0,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.052666032067075194,
+      "mean_coordinate_error_rad": 0.03591127571693315,
+      "min_pelvis_height_ratio": 0.9459436323778768
+    },
+    {
+      "groups": [
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 1,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.04544628063841874,
+      "mean_coordinate_error_rad": 0.033990265480336054,
+      "min_pelvis_height_ratio": 0.9469530897509708
+    },
+    {
+      "groups": [
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 2,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.046389044008765215,
+      "mean_coordinate_error_rad": 0.034550283766777545,
+      "min_pelvis_height_ratio": 0.9602341832612544
+    },
+    {
+      "groups": [
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 3,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.050681685898266174,
+      "mean_coordinate_error_rad": 0.03761178031587185,
+      "min_pelvis_height_ratio": 0.9554908085678638
+    },
+    {
+      "groups": [
+        "right_gluteus_maximus"
+      ],
+      "remaining_active_capacity": 0.2,
+      "outcome": "walked",
+      "seed": 4,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.05776575687927474,
+      "mean_coordinate_error_rad": 0.0355566429928225,
+      "min_pelvis_height_ratio": 0.952981579558399
+    },
+    {
+      "groups": [],
+      "remaining_active_capacity": 1.0,
+      "outcome": "walked",
+      "seed": 0,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.0570349221192091,
+      "mean_coordinate_error_rad": 0.03464875999388188,
+      "min_pelvis_height_ratio": 0.9519502143378393
+    },
+    {
+      "groups": [],
+      "remaining_active_capacity": 1.0,
+      "outcome": "walked",
+      "seed": 1,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.05199454886326309,
+      "mean_coordinate_error_rad": 0.03505596088758004,
+      "min_pelvis_height_ratio": 0.9433258042867589
+    },
+    {
+      "groups": [],
+      "remaining_active_capacity": 1.0,
+      "outcome": "walked",
+      "seed": 2,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.05078454608573542,
+      "mean_coordinate_error_rad": 0.0331480317395701,
+      "min_pelvis_height_ratio": 0.9411246572690092
+    },
+    {
+      "groups": [],
+      "remaining_active_capacity": 1.0,
+      "outcome": "walked",
+      "seed": 3,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.04939981251399396,
+      "mean_coordinate_error_rad": 0.0328599351941572,
+      "min_pelvis_height_ratio": 0.9429076419556635
+    },
+    {
+      "groups": [],
+      "remaining_active_capacity": 1.0,
+      "outcome": "walked",
+      "seed": 4,
+      "reset_noise_scale": 0.001,
+      "simulated_time_s": 3.499999999999836,
+      "requested_time_s": 3.51,
+      "first_threshold_crossing_s": null,
+      "max_mean_coordinate_error_rad": 0.04651869290192968,
+      "mean_coordinate_error_rad": 0.033857417649365826,
+      "min_pelvis_height_ratio": 0.9393232659271719
+    }
+  ]
+}

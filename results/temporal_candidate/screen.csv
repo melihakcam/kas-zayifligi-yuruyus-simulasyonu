@@ -1,0 +1,9 @@
+remaining_active_capacity,groups,independent,optimistic_envelope
+0.8,baseline,feasible,feasible
+0.8,right_tibialis_anterior,feasible,infeasible
+0.6,baseline,feasible,feasible
+0.6,right_tibialis_anterior,feasible,infeasible
+0.5,baseline,feasible,feasible
+0.5,right_tibialis_anterior,feasible,infeasible
+0.4,baseline,feasible,feasible
+0.4,right_tibialis_anterior,feasible,infeasible

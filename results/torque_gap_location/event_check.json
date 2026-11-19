@@ -1,0 +1,90 @@
+{
+  "scope": "Right ankle/foot relaxation, recorded cycle 1.17-2.34 s, activation time constant scale 1.0",
+  "event": {
+    "time_s": [
+      2.18,
+      2.182
+    ],
+    "tibant_r_excitation": [
+      0.0020912892650812864,
+      0.8908879160881042
+    ],
+    "tibant_r_activation": [
+      0.004184180451884279,
+      0.3544687136175645
+    ],
+    "ankle_target_torque_Nm": [
+      -2.3234230381397882,
+      26.10421365435161
+    ],
+    "ankle_target_jump_Nm": 28.427636692491397,
+    "median_ankle_target_step_Nm": 0.019635409389492375,
+    "large_tibant_excitation_changes": [
+      {
+        "time_s": 2.18,
+        "change": 0.888796626823023
+      },
+      {
+        "time_s": 2.2,
+        "change": -0.7749767526984215
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "remaining_active_capacity": 0.8,
+      "full_cycle_bound_Nm": 0.0373619775344941,
+      "before_event_bound_Nm": 0.0,
+      "after_event_bound_Nm": 0.0,
+      "statuses": [
+        "optimal",
+        "optimal",
+        "optimal"
+      ]
+    },
+    {
+      "remaining_active_capacity": 0.6,
+      "full_cycle_bound_Nm": 1.9706156646479513,
+      "before_event_bound_Nm": 0.0,
+      "after_event_bound_Nm": 0.0,
+      "statuses": [
+        "optimal",
+        "optimal",
+        "optimal"
+      ]
+    },
+    {
+      "remaining_active_capacity": 0.5,
+      "full_cycle_bound_Nm": 3.0922975409043203,
+      "before_event_bound_Nm": 0.0,
+      "after_event_bound_Nm": 0.0,
+      "statuses": [
+        "optimal",
+        "optimal",
+        "optimal"
+      ]
+    },
+    {
+      "remaining_active_capacity": 0.4,
+      "full_cycle_bound_Nm": 4.213979462608417,
+      "before_event_bound_Nm": 0.0,
+      "after_event_bound_Nm": 0.6090537188598375,
+      "statuses": [
+        "optimal",
+        "optimal",
+        "optimal"
+      ],
+      "after_event_binding_times_s": [
+        2.184,
+        2.186,
+        2.188
+      ],
+      "after_event_binding_weights": [
+        0.073,
+        0.3585,
+        0.5685
+      ]
+    }
+  ],
+  "interpretation": "If the bound vanishes or shrinks sharply when one transition is removed, the bound reflects a single controller-induced torque step, not a sustained property of the gait cycle."
+}

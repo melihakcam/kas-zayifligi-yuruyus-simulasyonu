@@ -1,0 +1,163 @@
+{
+  "scope": "Dual certificate of the right ankle/foot relaxation, recorded cycle 1.17-2.34 s",
+  "interpretation": "Dual weights show which equations the numerical lower bound rests on. They locate the conflict for this model and recording; they are not a clinical claim.",
+  "joints": [
+    "ankle_angle_r",
+    "subtalar_angle_r",
+    "mtp_angle_r"
+  ],
+  "muscles": [
+    "edl_r",
+    "ehl_r",
+    "fdl_r",
+    "fhl_r",
+    "gaslat_r",
+    "gasmed_r",
+    "perbrev_r",
+    "perlong_r",
+    "soleus_r",
+    "tibant_r",
+    "tibpost_r"
+  ],
+  "frame_skip": 10,
+  "right_foot_stance_windows_s": [
+    [
+      1.17,
+      1.648
+    ],
+    [
+      1.652,
+      1.658
+    ],
+    [
+      2.164,
+      2.34
+    ]
+  ],
+  "right_foot_swing_windows_s": [
+    [
+      1.65,
+      1.65
+    ],
+    [
+      1.66,
+      2.162
+    ]
+  ],
+  "scenarios": [
+    {
+      "remaining_active_capacity": 0.6,
+      "minimum_max_torque_error_Nm": 1.9706156646479513,
+      "balance_dual_sum": 0.9999999999999999,
+      "binding_torque_windows_s": [
+        [
+          2.18,
+          2.182
+        ]
+      ],
+      "binding_weight_in_right_stance": 0.9999999361448669,
+      "binding_weight_in_right_swing": 6.385513307005652e-08,
+      "binding_weight_within_1_step_of_control_update": 1.0,
+      "share_of_samples_within_1_step_of_control_update": 0.3003412969283277,
+      "joint_direction_split": {
+        "ankle_angle_r": {
+          "needs_more_positive_torque": 0.436072727979719,
+          "needs_less_positive_torque": 0.30733619890695685
+        },
+        "subtalar_angle_r": {
+          "needs_more_positive_torque": 0.2565910092581912,
+          "needs_less_positive_torque": 6.38551330110941e-08
+        },
+        "mtp_angle_r": {
+          "needs_more_positive_torque": 0.0,
+          "needs_less_positive_torque": 0.0
+        }
+      },
+      "activation_limit_split": {
+        "tibant_r": {
+          "rising_limit": 0.440423356793273,
+          "falling_limit": 0.0
+        },
+        "edl_r": {
+          "rising_limit": 0.21585116397596651,
+          "falling_limit": 3.3362411086088278e-06
+        },
+        "ehl_r": {
+          "rising_limit": 0.14479448786582078,
+          "falling_limit": 3.772132939970522e-08
+        },
+        "perlong_r": {
+          "rising_limit": 0.0,
+          "falling_limit": 0.08459514783275972
+        },
+        "fdl_r": {
+          "rising_limit": 0.0420301826296582,
+          "falling_limit": 0.0
+        },
+        "perbrev_r": {
+          "rising_limit": 0.0,
+          "falling_limit": 0.03771597722543981
+        }
+      },
+      "peak_binding_time_s": 2.1819999999999813,
+      "recorded_tibant_activation_at_peak": 0.3544687136175645
+    },
+    {
+      "remaining_active_capacity": 0.4,
+      "minimum_max_torque_error_Nm": 4.213979462608417,
+      "balance_dual_sum": 0.9999999999999998,
+      "binding_torque_windows_s": [
+        [
+          2.18,
+          2.182
+        ]
+      ],
+      "binding_weight_in_right_stance": 1.0,
+      "binding_weight_in_right_swing": 0.0,
+      "binding_weight_within_1_step_of_control_update": 1.0,
+      "share_of_samples_within_1_step_of_control_update": 0.3003412969283277,
+      "joint_direction_split": {
+        "ankle_angle_r": {
+          "needs_more_positive_torque": 0.43607275582520283,
+          "needs_less_positive_torque": 0.3073362185319519
+        },
+        "subtalar_angle_r": {
+          "needs_more_positive_torque": 0.25659102564284525,
+          "needs_less_positive_torque": 0.0
+        },
+        "mtp_angle_r": {
+          "needs_more_positive_torque": 0.0,
+          "needs_less_positive_torque": 0.0
+        }
+      },
+      "activation_limit_split": {
+        "tibant_r": {
+          "rising_limit": 0.3441462129035701,
+          "falling_limit": 0.0
+        },
+        "edl_r": {
+          "rising_limit": 0.25299870960757476,
+          "falling_limit": 0.0
+        },
+        "ehl_r": {
+          "rising_limit": 0.16971332428126776,
+          "falling_limit": 0.0
+        },
+        "perlong_r": {
+          "rising_limit": 0.0,
+          "falling_limit": 0.0991398108104631
+        },
+        "fdl_r": {
+          "rising_limit": 0.04926350866076402,
+          "falling_limit": 0.0
+        },
+        "perbrev_r": {
+          "rising_limit": 0.0,
+          "falling_limit": 0.04419989057211239
+        }
+      },
+      "peak_binding_time_s": 2.1819999999999813,
+      "recorded_tibant_activation_at_peak": 0.3544687136175645
+    }
+  ]
+}

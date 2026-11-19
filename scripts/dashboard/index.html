@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GaitSim Canlı</title>
+<style>
+:root {
+  --bg: #0b0f1a; --panel: #121829; --panel2: #171f34; --line: #243052; --text: #e6e9f2; --muted: #8b93ab;
+  --accent: #7b5cff; --accent2: #5b8cff; --red: #ff4d4d; --orange: #ffa31a; --green: #3ccf7a; --yellow: #f5c84b;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.4 "Segoe UI", system-ui, sans-serif; }
+header { display: flex; align-items: center; gap: 14px; padding: 10px 18px; border-bottom: 1px solid var(--line); }
+header h1 { font-size: 18px; margin: 0; letter-spacing: .3px; }
+header .sub { color: var(--muted); font-size: 12px; }
+header .conn { margin-left: auto; font-size: 12px; color: var(--muted); }
+header .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-right: 6px; }
+header .dot.on { background: var(--green); }
+.grid { display: grid; grid-template-columns: 270px minmax(420px, 1fr) 420px; gap: 12px; padding: 12px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.panel h2 { font-size: 14px; margin: 0 0 10px; font-weight: 600; }
+.panel h3 { font-size: 12px; margin: 12px 0 6px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .6px; }
+.side { display: flex; flex-direction: column; gap: 12px; }
+select, button { font: inherit; color: var(--text); background: var(--panel2); border: 1px solid var(--line); border-radius: 7px; padding: 7px 10px; }
+button { cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); border-color: var(--accent); font-weight: 600; width: 100%; padding: 11px; font-size: 14px; }
+button.ghost { width: 100%; }
+.preset { display: block; width: 100%; text-align: left; margin-bottom: 6px; }
+.preset.active { border-color: var(--accent); background: #211a46; }
+.slider { margin: 8px 0 10px; }
+.slider .row { display: flex; justify-content: space-between; align-items: center; }
+.slider .val { font-variant-numeric: tabular-nums; background: var(--panel2); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; min-width: 46px; text-align: right; }
+.slider.weak .name { color: var(--orange); }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.viewer { display: flex; flex-direction: column; gap: 10px; }
+.stage { position: relative; background: #000; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 4 / 3; }
+.stage img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.stage .placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); text-align: center; padding: 20px; }
+.chips { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 6px; }
+.chip { background: rgba(255, 163, 26, .16); border: 1px solid var(--orange); color: #ffd28a; border-radius: 7px; padding: 4px 9px; font-weight: 600; }
+.badge { position: absolute; top: 10px; right: 10px; border-radius: 8px; padding: 6px 12px; font-weight: 700; font-size: 14px; background: rgba(0,0,0,.55); border: 1px solid var(--line); }
+.badge.running { color: var(--green); border-color: var(--green); }
+.badge.walked { color: var(--green); border-color: var(--green); }
+.badge.deviated { color: var(--yellow); border-color: var(--yellow); }
+.badge.fell { color: var(--red); border-color: var(--red); background: rgba(80, 0, 0, .6); }
+.hud { position: absolute; bottom: 10px; left: 10px; right: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+.hud span { background: rgba(0,0,0,.55); border-radius: 6px; padding: 3px 8px; font-variant-numeric: tabular-nums; }
+.legendbar { position: absolute; bottom: 44px; right: 10px; background: rgba(0,0,0,.55); border-radius: 6px; padding: 5px 8px; font-size: 11px; }
+.legendbar .bar { width: 140px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, rgb(56,82,133), rgb(255,31,13)); margin: 3px 0; }
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.controls .grow { flex: 1; height: 6px; background: var(--panel2); border-radius: 3px; position: relative; overflow: hidden; }
+.controls .grow i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); }
+.charts { display: flex; flex-direction: column; gap: 12px; }
+canvas { width: 100%; display: block; }
+.legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--muted); margin-top: 4px; }
+.legend b { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin-right: 4px; border-radius: 2px; }
+.legend b.dash { background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 7px) !important; height: 2px; }
+.bottom { display: grid; grid-template-columns: 1fr 1.2fr 1.3fr; gap: 12px; padding: 0 12px 14px; }
+.summary li { list-style: none; display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.summary ul { margin: 0; padding: 0; }
+.summary .ic { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; flex: none; }
+.ic.ok { background: var(--green); color: #062; } .ic.no { background: var(--red); color: #fff; } .ic.wait { background: var(--line); color: var(--muted); } .ic.warn { background: var(--yellow); color: #432; }
+.bars .b { display: grid; grid-template-columns: 110px 1fr 1fr; gap: 8px; align-items: center; margin: 5px 0; }
+.bars .track { height: 10px; background: var(--panel2); border-radius: 5px; position: relative; overflow: hidden; }
+.bars .track i { position: absolute; inset: 0 auto 0 0; border-radius: 5px; transition: width .08s linear; }
+.bars .track u { position: absolute; top: -2px; bottom: -2px; width: 2px; background: #fff8; }
+.bars .head { color: var(--muted); font-size: 11px; }
+.bars .name.weak { color: var(--orange); font-weight: 600; }
+.sweep .tabs { display: flex; gap: 6px; margin-bottom: 8px; }
+.sweep .tabs button.on { border-color: var(--accent); background: #211a46; }
+.sweep table { border-collapse: collapse; font-size: 11px; }
+.sweep td, .sweep th { width: 30px; height: 24px; text-align: center; padding: 0; }
+.sweep th { color: var(--muted); font-weight: 500; }
+.sweep th.r { text-align: right; padding-right: 6px; width: 96px; white-space: nowrap; }
+.sweep td.c { cursor: pointer; border: 2px solid var(--panel); border-radius: 4px; color: #0b0f1a; font-weight: 600; }
+.sweep td.c:hover { outline: 2px solid #fff; }
+.w { background: #3ccf7a; } .d { background: #f5c84b; } .f { background: #ff5a4d; }
+.note { color: var(--muted); font-size: 11px; margin-top: 8px; }
+@media (max-width: 1250px) { .grid { grid-template-columns: 250px 1fr; } .charts { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); } .bottom { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .charts { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7b5cff" stroke-width="2" stroke-linecap="round"><circle cx="13" cy="4" r="2"/><path d="M11 8l-3 5 4 2-2 7M11 8l4 3 3 0M12 15l4 3 1 4"/></svg>
+  <div><h1>GaitSim · Canlı</h1><div class="sub">Kas-iskelet yürüyüş simülasyonu — MS-Human-700 alt gövde, hazır kontrolcü</div></div>
+  <div class="conn"><span class="dot" id="dot"></span><span id="conn">Bağlanıyor…</span></div>
+</header>
+
+<div class="grid">
+  <aside class="side">
+    <div class="panel">
+      <h2>Senaryo</h2>
+      <button class="preset" data-preset="normal">Normal yürüyüş</button>
+      <button class="preset" data-preset="glut">Gluteus med. + max. %20 <span style="color:var(--muted)">(düşüyor)</span></button>
+      <button class="preset" data-preset="glmed">Sadece gluteus med. %20</button>
+      <button class="preset" data-preset="gastro">Gastroknemius + kalça fleksör %20</button>
+      <button class="preset" data-preset="tib">Tibialis anterior %40</button>
+      <h3>Kas grupları (sağ bacak) — aktif kuvvet</h3>
+      <div id="sliders"></div>
+    </div>
+    <button class="primary" id="start">▶ Simülasyonu başlat</button>
+    <button class="ghost" id="reset">↺ Kuvvetleri sıfırla</button>
+  </aside>
+
+  <section class="viewer">
+    <div class="stage">
+      <img id="frame" alt="Canlı simülasyon görüntüsü">
+      <div class="placeholder" id="placeholder">Model yükleniyor… Hazır olunca bir senaryo seçip “Simülasyonu başlat”a basın.</div>
+      <div class="chips" id="chips"></div>
+      <div class="badge" id="badge" hidden></div>
+      <div class="legendbar">Kas aktivasyonu<div class="bar"></div><span>0</span><span style="float:right">1</span><div style="color:var(--orange)">turuncu kenar: zayıflatılan</div></div>
+      <div class="hud"><span id="hTime">t = 0.00 s</span><span id="hCycle">Döngü %0</span><span id="hErr">Sapma 0.000 rad</span><span id="hPel">Pelvis %100</span></div>
+    </div>
+    <div class="controls">
+      <button id="pause">⏸</button>
+      <div class="grow"><i id="progress"></i></div>
+      <select id="speed"><option value="0.25">0.25×</option><option value="0.5" selected>0.5×</option><option value="1">1×</option></select>
+      <select id="view"><option value="side">Yandan</option><option value="front">Önden</option><option value="back">Arkadan</option><option value="foot">Sağ ayak yakın</option></select>
+    </div>
+  </section>
+
+  <section class="charts">
+    <div class="panel"><h2>Kas aktivasyonu</h2><canvas id="cAct" height="150"></canvas><div class="legend" id="lAct"></div></div>
+    <div class="panel"><h2>Sağ eklem açıları (°)</h2><canvas id="cJoint" height="150"></canvas>
+      <div class="legend"><span style="color:#5b8cff"><b style="background:#5b8cff"></b>Kalça</span><span style="color:#3ccf7a"><b style="background:#3ccf7a"></b>Diz</span><span style="color:#ff7a59"><b style="background:#ff7a59"></b>Ayak bileği</span><span><b class="dash" style="color:#8b93ab"></b>Normal yürüyüş</span></div></div>
+    <div class="panel"><h2>Hareketten sapma ve yer kuvveti</h2><canvas id="cErr" height="150"></canvas>
+      <div class="legend"><span style="color:#b48cff"><b style="background:#b48cff"></b>Ort. eklem sapması (rad)</span><span style="color:#f5c84b"><b class="dash"></b>0,06 sınır</span><span style="color:#4fd1c5"><b style="background:#4fd1c5"></b>Sağ ayak yer kuvveti (sağ eksen, N)</span></div></div>
+  </section>
+</div>
+
+<div class="bottom">
+  <div class="panel summary"><h2>Sonuç özeti</h2><ul id="summary"></ul>
+    <div class="note">Sınıflar: yürüdü (sapma ≤ 0,06 rad), saptı, düştü (pelvis başlangıcın %70’inin altına indi). Kontrolcü zayıflığa göre yeniden eğitilmez.</div></div>
+  <div class="panel bars"><h2>Anlık kas aktivasyonu</h2>
+    <div class="b head"><span></span><span>Sağ (beyaz çizgi: normal)</span><span>Sol</span></div>
+    <div id="bars"></div></div>
+  <div class="panel sweep"><h2>Taranmış sonuçlar (145 simülasyon)</h2>
+    <div class="tabs" id="tabs"></div><div id="sweep">Yükleniyor…</div>
+    <div class="note">Köşegen: tek grup; diğer hücreler: iki grup birlikte. Hücreye tıklayınca o senaryo canlı çalışır. <span class="w" style="color:#062;padding:0 4px;border-radius:3px">yürüdü</span> <span class="d" style="color:#432;padding:0 4px;border-radius:3px">saptı</span> <span class="f" style="color:#fff;padding:0 4px;border-radius:3px">düştü</span></div></div>
+</div>
+
+<script>
+const LABEL = {
+  right_tibialis_anterior: 'Tibialis ant.', right_soleus: 'Soleus', right_gastrocnemius: 'Gastroknemius',
+  right_vasti: 'Vastus', right_hamstrings: 'Hamstring', right_gluteus_medius: 'Gluteus med.',
+  right_gluteus_maximus: 'Gluteus max.', right_hip_flexors: 'Kalça fleksör'
+};
+const COLORS = ['#ff5a4d', '#5b8cff', '#3ccf7a', '#f5c84b', '#b48cff', '#4fd1c5', '#ff9f43', '#ff6bd6'];
+const PRESETS = {
+  normal: {},
+  glut: { right_gluteus_medius: .2, right_gluteus_maximus: .2 },
+  glmed: { right_gluteus_medius: .2 },
+  gastro: { right_gastrocnemius: .2, right_hip_flexors: .2 },
+  tib: { right_tibialis_anterior: .4 },
+};
+let groups = Object.keys(LABEL), ws, paused = false, history = [], lastState = null, runCaps = {};
+const $ = id => document.getElementById(id);
+
+function buildSliders() {
+  $('sliders').innerHTML = groups.map(g => `
+    <div class="slider" id="s_${g}"><div class="row"><span class="name">${LABEL[g]}</span><span class="val" id="v_${g}">100%</span></div>
+    <input type="range" min="0" max="100" step="5" value="100" data-g="${g}"></div>`).join('');
+  document.querySelectorAll('#sliders input').forEach(el => el.addEventListener('input', () => { markPreset(null); syncSlider(el.dataset.g); }));
+}
+function syncSlider(g) {
+  const v = +document.querySelector(`#sliders input[data-g="${g}"]`).value;
+  $('v_' + g).textContent = v + '%';
+  $('s_' + g).classList.toggle('weak', v < 100);
+}
+function setCaps(caps) {
+  groups.forEach(g => { document.querySelector(`#sliders input[data-g="${g}"]`).value = Math.round((caps[g] ?? 1) * 100); syncSlider(g); });
+}
+function caps() {
+  const c = {}; groups.forEach(g => c[g] = +document.querySelector(`#sliders input[data-g="${g}"]`).value / 100); return c;
+}
+function markPreset(name) { document.querySelectorAll('.preset').forEach(b => b.classList.toggle('active', b.dataset.preset === name)); }
+
+function connect() {
+  ws = new WebSocket(`ws://${location.host}/ws`);
+  ws.binaryType = 'blob';
+  ws.onopen = () => { $('dot').classList.add('on'); $('conn').textContent = 'Simülasyon sunucusu bağlı'; };
+  ws.onclose = () => { $('dot').classList.remove('on'); $('conn').textContent = 'Bağlantı kesildi — yeniden deneniyor'; setTimeout(connect, 1500); };
+  ws.onmessage = ev => {
+    if (typeof ev.data !== 'string') {
+      const url = URL.createObjectURL(ev.data), img = $('frame'), old = img.src;
+      img.src = url; $('placeholder').hidden = true; if (old.startsWith('blob:')) URL.revokeObjectURL(old); return;
+    }
+    const m = JSON.parse(ev.data);
+    if (m.type === 'info') { $('placeholder').textContent = 'Hazır. Bir senaryo seçip “Simülasyonu başlat”a basın.'; return; }
+    if (m.type === 'state') onState(m);
+  };
+}
+function send(o) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); }
+
+function start() {
+  history = []; runCaps = caps(); paused = false; $('pause').textContent = '⏸';
+  send({ cmd: 'speed', value: +$('speed').value });
+  send({ cmd: 'start', capacities: runCaps });
+}
+
+const STATUS = { running: 'YÜRÜYOR', walked: 'YÜRÜDÜ · 3 döngü tamam', deviated: 'HAREKETTEN SAPTI', fell: 'DÜŞTÜ', paused: 'DURAKLADI' };
+function onState(s) {
+  if (s.groups) { history.push(s); lastState = s; }
+  const st = lastState || s;
+  const status = s.status;
+  const badge = $('badge'); badge.hidden = false; badge.className = 'badge ' + status;
+  badge.textContent = s.final && status === 'deviated' ? 'BİTTİ · hareketten saptı' : (STATUS[status] || status);
+  if (s.groups) {
+    $('hTime').textContent = `t = ${s.time.toFixed(2)} s`;
+    $('hCycle').textContent = `Döngü %${s.cycle.toFixed(0)}`;
+    $('hErr').textContent = `Sapma ${s.error.toFixed(3)} rad`;
+    $('hPel').textContent = `Pelvis %${(s.pelvis_ratio * 100).toFixed(0)}`;
+    $('progress').style.width = Math.min(100, s.time / 3.51 * 100) + '%';
+    const weak = Object.entries(s.capacities || {}).filter(([, c]) => c < 1);
+    $('chips').innerHTML = weak.map(([g, c]) => `<div class="chip">${LABEL[g]} ↓ %${Math.round(c * 100)}</div>`).join('');
+    drawBars(s); drawCharts();
+  }
+  drawSummary(s, st);
+}
+
+function drawBars(s) {
+  const weak = g => (s.capacities?.[g] ?? 1) < 1;
+  const col = a => `rgb(${56 + a * 199},${82 - a * 51},${133 - a * 120})`;
+  $('bars').innerHTML = groups.map(g => {
+    const v = s.groups[g], r = Math.min(1, v.right), n = Math.min(1, v.normal), l = v.left == null ? 0 : Math.min(1, v.left);
+    return `<div class="b"><span class="name ${weak(g) ? 'weak' : ''}">${LABEL[g]}</span>
+      <div class="track"><i style="width:${r * 100}%;background:${col(r)}"></i><u style="left:${n * 100}%"></u></div>
+      <div class="track"><i style="width:${l * 100}%;background:${col(l)}"></i></div></div>`;
+  }).join('');
+}
+
+function setupCanvas(c) {
+  const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = +c.getAttribute('height');
+  if (c.width !== w * dpr) { c.width = w * dpr; c.height = h * dpr; c.style.height = h + 'px'; }
+  const g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h); return [g, w, h];
+}
+function axes(g, w, h, ymin, ymax, ticks, left = 34, right = 8) {
+  const T = 3.52, X = t => left + (w - left - right) * t / T, Y = v => 8 + (h - 26) * (1 - (v - ymin) / (ymax - ymin));
+  g.strokeStyle = '#243052'; g.fillStyle = '#8b93ab'; g.font = '10px Segoe UI'; g.lineWidth = 1;
+  ticks.forEach(v => { g.beginPath(); g.moveTo(left, Y(v)); g.lineTo(w - right, Y(v)); g.stroke(); g.fillText(v, 2, Y(v) + 3); });
+  [0, 1, 2, 3].forEach(t => g.fillText(t + ' s', X(t) - 6, h - 4));
+  const cyc = 1.17; g.strokeStyle = '#2d3a63'; g.setLineDash([2, 3]);
+  [cyc, 2 * cyc].forEach(t => { g.beginPath(); g.moveTo(X(t), 8); g.lineTo(X(t), h - 18); g.stroke(); }); g.setLineDash([]);
+  return [X, Y];
+}
+function line(g, X, Y, key, color, dash) {
+  g.strokeStyle = color; g.lineWidth = dash ? 1.3 : 2; g.setLineDash(dash ? [4, 3] : []); g.beginPath();
+  history.forEach((s, i) => { const v = key(s); if (v == null) return; i ? g.lineTo(X(s.time), Y(v)) : g.moveTo(X(s.time), Y(v)); });
+  g.stroke(); g.setLineDash([]);
+}
+function drawCharts() {
+  if (!history.length) return;
+  const s = history[history.length - 1];
+  let shown = groups.filter(g => (s.capacities?.[g] ?? 1) < 1);
+  if (!shown.length) shown = ['right_gluteus_medius', 'right_gastrocnemius'];
+  shown = shown.slice(0, 3);
+  let [g, w, h] = setupCanvas($('cAct')); let [X, Y] = axes(g, w, h, 0, 1, [0, 0.5, 1]);
+  shown.forEach((k, i) => { line(g, X, Y, s => s.groups[k].normal, COLORS[i], true); line(g, X, Y, s => s.groups[k].right, COLORS[i]); });
+  $('lAct').innerHTML = shown.map((k, i) => `<span style="color:${COLORS[i]}"><b style="background:${COLORS[i]}"></b>${LABEL[k]} (şimdi)</span>`).join('') +
+    '<span><b class="dash" style="color:#8b93ab"></b>normal yürüyüşte</span>';
+  [g, w, h] = setupCanvas($('cJoint')); [X, Y] = axes(g, w, h, -60, 80, [-60, -30, 0, 30, 60]);
+  [['hip_flexion_r', '#5b8cff'], ['knee_angle_r', '#3ccf7a'], ['ankle_angle_r', '#ff7a59']].forEach(([j, c]) => {
+    line(g, X, Y, s => s.joints[j].normal, c, true); line(g, X, Y, s => s.joints[j].now, c);
+  });
+  [g, w, h] = setupCanvas($('cErr')); [X, Y] = axes(g, w, h, 0, 0.2, [0, 0.06, 0.1, 0.2], 34, 40);
+  g.strokeStyle = '#f5c84b'; g.setLineDash([5, 4]); g.beginPath(); g.moveTo(34, Y(0.06)); g.lineTo(w - 40, Y(0.06)); g.stroke(); g.setLineDash([]);
+  const G = v => 8 + (h - 26) * (1 - Math.min(v, 2500) / 2500);
+  g.fillStyle = '#4fd1c5'; g.fillText('2500 N', w - 38, 14);
+  g.strokeStyle = '#4fd1c5'; g.lineWidth = 1.2; g.beginPath();
+  history.forEach((s, i) => i ? g.lineTo(X(s.time), G(s.grf)) : g.moveTo(X(s.time), G(s.grf))); g.stroke();
+  line(g, X, v => Y(Math.min(v, 0.2)), s => s.error, '#b48cff');
+}
+
+function drawSummary(s, st) {
+  const caps = st.capacities || runCaps, weak = Object.entries(caps).filter(([, c]) => c < 1);
+  const items = [];
+  const name = weak.length ? weak.map(([g, c]) => `${LABEL[g]} %${Math.round(c * 100)}`).join(' + ') : 'Tüm kaslar %100';
+  items.push(['wait', 'Senaryo: ' + name]);
+  const fell = st.fell_at != null || s.status === 'fell', dev = st.deviated_at != null;
+  if (fell) items.push(['no', `Düştü: ${st.fell_at?.toFixed(2)} s`]);
+  else if (s.final) items.push(['ok', '3 yürüyüş döngüsü tamamlandı']);
+  else items.push(['wait', 'Yürüyüş sürüyor…']);
+  items.push(dev ? ['warn', `Sapma sınırı ilk aşıldı: ${st.deviated_at.toFixed(2)} s`] : ['ok', 'Sapma sınırın altında']);
+  const known = lookupSweep(caps);
+  if (known) items.push(['wait', known]);
+  $('summary').innerHTML = items.map(([c, t]) => `<li><span class="ic ${c}">${{ ok: '✓', no: '✕', warn: '!', wait: '•' }[c]}</span><span>${t}</span></li>`).join('');
+}
+
+let SWEEP = null, level = 0.2;
+function lookupSweep(caps) {
+  if (!SWEEP?.forward_sweep_robust) return null;
+  const weak = Object.entries(caps).filter(([, c]) => c < 1);
+  if (!weak.length || weak.length > 2 || new Set(weak.map(w => w[1])).size !== 1) return null;
+  const set = weak.map(w => w[0]).sort().join('+'), c = weak[0][1];
+  const rows = SWEEP.forward_sweep_robust.filter(r => r.groups.slice().sort().join('+') === set && Math.abs(r.remaining_active_capacity - c) < 1e-6);
+  if (!rows.length) return null;
+  const n = k => rows.filter(r => r.outcome === k).length;
+  return `5 tekrarlı testte: ${n('walked')} yürüdü, ${n('deviated')} saptı, ${n('fell')} düştü`;
+}
+async function loadSweep() {
+  SWEEP = await (await fetch('/api/sweep')).json();
+  const levels = [...new Set(SWEEP.forward_sweep.filter(r => r.groups.length).map(r => r.remaining_active_capacity))].sort((a, b) => b - a);
+  $('tabs').innerHTML = levels.map(l => `<button data-l="${l}" class="${l === level ? 'on' : ''}">%${Math.round(l * 100)}</button>`).join('');
+  $('tabs').querySelectorAll('button').forEach(b => b.onclick = () => { level = +b.dataset.l; loadSweepTable(); $('tabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); });
+  loadSweepTable();
+}
+function loadSweepTable() {
+  const find = (a, b) => SWEEP.forward_sweep.find(r => Math.abs(r.remaining_active_capacity - level) < 1e-6 &&
+    r.groups.slice().sort().join('+') === (a === b ? [a] : [a, b].sort()).join('+'));
+  let html = '<table><tr><th></th>' + groups.map(g => `<th title="${LABEL[g]}">${LABEL[g].slice(0, 4)}</th>`).join('') + '</tr>';
+  groups.forEach((a, i) => {
+    html += `<tr><th class="r">${LABEL[a]}</th>`;
+    groups.forEach((b, j) => {
+      if (j > i) { html += '<td></td>'; return; }
+      const r = find(a, b); if (!r) { html += '<td></td>'; return; }
+      const cls = { walked: 'w', deviated: 'd', fell: 'f' }[r.outcome];
+      html += `<td class="c ${cls}" data-a="${a}" data-b="${b}" title="${LABEL[a]}${a === b ? '' : ' + ' + LABEL[b]} %${Math.round(level * 100)}: ${r.outcome}, en büyük sapma ${r.max_mean_coordinate_error_rad.toFixed(3)} rad">${a === b ? '●' : ''}</td>`;
+    });
+    html += '</tr>';
+  });
+  $('sweep').innerHTML = html + '</table>';
+  $('sweep').querySelectorAll('td.c').forEach(td => td.onclick = () => {
+    const c = {}; c[td.dataset.a] = level; c[td.dataset.b] = level; setCaps(c); markPreset(null); start();
+  });
+}
+
+buildSliders();
+document.querySelectorAll('.preset').forEach(b => b.onclick = () => { setCaps(PRESETS[b.dataset.preset]); markPreset(b.dataset.preset); start(); });
+$('start').onclick = start;
+$('reset').onclick = () => { setCaps({}); markPreset('normal'); };
+$('pause').onclick = () => { paused = !paused; $('pause').textContent = paused ? '▶' : '⏸'; send({ cmd: 'pause', paused }); };
+$('speed').onchange = () => send({ cmd: 'speed', value: +$('speed').value });
+$('view').onchange = () => send({ cmd: 'view', value: $('view').value });
+window.addEventListener('resize', drawCharts);
+markPreset('normal');
+connect();
+loadSweep();
+</script>
+</body>
+</html>
